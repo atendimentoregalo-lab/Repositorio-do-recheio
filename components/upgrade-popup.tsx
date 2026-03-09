@@ -15,6 +15,18 @@ export function UpgradePopup({
 
   useEffect(() => {
     if (!show) return
+    
+    // Meta Pixel - ViewContent quando popup abre
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'ViewContent', {
+        content_name: 'Recheios Secretos Premium',
+        content_ids: ['recheios-premium'],
+        content_type: 'product',
+        value: 7.99,
+        currency: 'BRL'
+      });
+    }
+    
     const timer = setInterval(() => {
       setCountdown((prev) => (prev > 0 ? prev - 1 : 0))
     }, 1000)
@@ -28,11 +40,27 @@ export function UpgradePopup({
   }
 
   const handleUpgradeAccept = () => {
+    // Meta Pixel - InitiateCheckout Premium
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'InitiateCheckout', {
+        content_name: 'Recheios Secretos Premium',
+        value: 7.99,
+        currency: 'BRL'
+      });
+    }
     window.location.href =
       "https://www.ggcheckout.com/checkout/v2/YZdjit7Wh1dMX8FOAbHR"
   }
 
   const handleUpgradeDecline = () => {
+    // Meta Pixel - InitiateCheckout Basico
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'InitiateCheckout', {
+        content_name: 'Recheios Secretos Basico',
+        value: 1.99,
+        currency: 'BRL'
+      });
+    }
     window.location.href =
       "https://www.ggcheckout.com/checkout/v2/O4PSYnUIBTKXuBQ3Odnn"
   }
