@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Recheios Secretos - 100 Receitas de Recheios Cremosos",
   description:
     "Aprenda a fazer recheios cremosos perfeitos para bolos, tortas e sobremesas. Receitas fáceis, rápidas e baratas com ingredientes simples.",
-    generator: 'v0.app'
+  generator: "v0.app",
 }
 
 export default function RootLayout({
@@ -19,14 +19,20 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://i.imgur.com" />
         <link rel="dns-prefetch" href="https://i.imgur.com" />
+        <link rel="preconnect" href="https://connect.facebook.net" />
+        <link rel="dns-prefetch" href="https://connect.facebook.net" />
         <link rel="preload" as="image" href="https://i.imgur.com/6vsyA6d.jpeg" />
         <link rel="preload" as="image" href="https://i.imgur.com/ISLoVFH.png" />
         <link rel="preload" as="image" href="https://i.imgur.com/KbB9y0e.jpeg" />
         <script
+          async
+          defer
           dangerouslySetInnerHTML={{
-            __html: `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','1058788355816913');fbq('track','PageView');`,
+            __html: `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','1058788355816913');fbq('track','PageView');fbq('track','ViewContent',{content_name:'Recheios Secretos',content_type:'product',value:1.99,currency:'BRL'});`,
           }}
         />
+      </head>
+      <body className="font-sans antialiased">
         <noscript>
           <img
             height="1"
@@ -36,8 +42,6 @@ export default function RootLayout({
             alt=""
           />
         </noscript>
-      </head>
-      <body className="font-sans antialiased">
         {children}
       </body>
     </html>
