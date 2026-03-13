@@ -96,6 +96,21 @@ export default function SalesPage() {
         </div>
       </section>
 
+      {/* Expert Section */}
+      <section className="py-10 px-4" style={{ backgroundColor: "#f5ede0" }}>
+        <div className="max-w-sm mx-auto text-center">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Quem sou eu</h2>
+          <img
+            src="https://i.imgur.com/jYfUYV7.jpeg"
+            alt="Clara Aureliano - Expert em confeitaria"
+            className="w-full max-w-[320px] mx-auto rounded-2xl shadow-lg"
+            loading="lazy"
+            style={{ borderRadius: "16px" }}
+          />
+          <p className="mt-3 text-sm text-gray-600 font-medium">Clara Aureliano</p>
+        </div>
+      </section>
+
       {/* Prova de uso */}
       <section className="py-12 px-4">
         <div className="max-w-2xl mx-auto">
