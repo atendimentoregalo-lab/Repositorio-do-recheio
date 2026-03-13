@@ -25,7 +25,21 @@ export function TestimonialsCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [touchStart, setTouchStart] = useState(0)
   const [touchEnd, setTouchEnd] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
   const carouselRef = useRef<HTMLDivElement>(null)
+
+  // Auto-rotate a cada 3 segundos
+  useEffect(() => {
+    if (isPaused) return
+    
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) =>
+        prev === testimonialImages.length - 1 ? 0 : prev + 1
+      )
+    }, 3000)
+
+    return () => clearInterval(interval)
+  }, [isPaused])
 
   const handlePrev = () => {
     setCurrentIndex((prev) =>
@@ -87,9 +101,17 @@ export function TestimonialsCarousel() {
           <div
             ref={carouselRef}
             className="overflow-hidden mx-8 sm:mx-12"
-            onTouchStart={handleTouchStart}
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            onTouchStart={(e) => {
+              setIsPaused(true)
+              handleTouchStart(e)
+            }}
             onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
+            onTouchEnd={(e) => {
+              handleTouchEnd()
+              setTimeout(() => setIsPaused(false), 1000)
+            }}
           >
             {/* Mobile: 1 card */}
             <div className="flex gap-4 sm:hidden">

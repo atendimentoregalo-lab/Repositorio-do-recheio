@@ -96,6 +96,19 @@ export default function SalesPage() {
         </div>
       </section>
 
+      {/* Expert Section */}
+      <section className="py-10 px-4" style={{ backgroundColor: "#f5ede0" }}>
+        <div className="max-w-sm mx-auto">
+          <img
+            src="https://i.imgur.com/jYfUYV7.jpeg"
+            alt="Expert em confeitaria"
+            className="w-full max-w-[320px] mx-auto rounded-2xl shadow-lg"
+            loading="lazy"
+            style={{ borderRadius: "16px" }}
+          />
+        </div>
+      </section>
+
       {/* Prova de uso */}
       <section className="py-12 px-4">
         <div className="max-w-2xl mx-auto">
