@@ -1,5 +1,6 @@
 import { Check, Shield } from "lucide-react"
 import { BuyButton, ScrollButton } from "@/components/buy-button"
+import { TestimonialsCarousel } from "@/components/testimonials-carousel"
 
 export default function SalesPage() {
   return (
@@ -153,6 +154,9 @@ export default function SalesPage() {
           </div>
         </div>
       </section>
+
+      {/* Depoimentos */}
+      <TestimonialsCarousel />
 
       {/* Garantia */}
       <section className="py-12 px-4">
