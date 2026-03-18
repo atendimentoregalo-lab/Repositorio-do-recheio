@@ -204,7 +204,7 @@ export default function SalesPage() {
       <section className="py-8 px-4 bg-white border-t">
         <div className="max-w-2xl mx-auto text-center">
           <a
-            href="https://capable-froyo-8c85bb.netlify.app/"
+            href="https://wa.me/5587974009597?text=Ol%C3%A1%2C%20tenho%20d%C3%BAvidas%20sobre%20os%20Recheios%20Secretos%2C%20e%20preciso%20de%20Ajuda!"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-lg shadow-lg transition-all hover:scale-105"
