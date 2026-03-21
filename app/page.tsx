@@ -1,5 +1,6 @@
 import { Check, Shield } from "lucide-react"
 import { BuyButton, ScrollButton } from "@/components/buy-button"
+import Image from "next/image"
 
 export default function SalesPage() {
   return (
@@ -22,45 +23,39 @@ export default function SalesPage() {
           <div className="flex justify-center gap-6 mb-10">
             <div className="flex flex-col items-center">
               <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden shadow-lg border-4 border-white">
-                <img
-                  src="https://i.imgur.com/6vsyA6d.jpeg"
+                <Image
+                  src="/images/recheio-chocolate.jpg"
                   alt="Recheio de chocolate"
                   className="w-full h-full object-cover"
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="async"
                   width={112}
                   height={112}
+                  priority
                 />
               </div>
               <p className="text-sm text-gray-600 mt-2 font-medium">Chocolate</p>
             </div>
             <div className="flex flex-col items-center">
               <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden shadow-lg border-4 border-white">
-                <img
-                  src="https://i.imgur.com/ISLoVFH.png"
+                <Image
+                  src="/images/recheio-leite-ninho.png"
                   alt="Recheio de leite ninho"
                   className="w-full h-full object-cover"
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="async"
                   width={112}
                   height={112}
+                  priority
                 />
               </div>
               <p className="text-sm text-gray-600 mt-2 font-medium">Leite Ninho</p>
             </div>
             <div className="flex flex-col items-center">
               <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden shadow-lg border-4 border-white">
-                <img
-                  src="https://i.imgur.com/KbB9y0e.jpeg"
+                <Image
+                  src="/images/recheio-morango.jpg"
                   alt="Recheio de morango"
                   className="w-full h-full object-cover"
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="async"
                   width={112}
                   height={112}
+                  priority
                 />
               </div>
               <p className="text-sm text-gray-600 mt-2 font-medium">Morango</p>
