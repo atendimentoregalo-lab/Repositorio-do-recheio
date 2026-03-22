@@ -161,7 +161,7 @@ export default function SalesPage() {
               <ul className="space-y-3 mb-8 flex-1">
                 {[
                   "250 receitas de recheios cremosos",
-                  "Com fogo e sem fogo",
+                  "Recheios com e sem fogo",
                   "Rende 2kg cada receita",
                   "Acesso imediato pelo celular",
                   "Uso liberado para vender",
@@ -220,7 +220,7 @@ export default function SalesPage() {
                 {"O que está incluído no Acesso Completo?"}
               </h3>
               <p className="text-gray-700">
-                {"O Acesso Completo inclui 250 receitas de recheios cremosos (com fogo e sem fogo), mais videoaulas ensinando como vender suas receitas, como precificar seus produtos corretamente e como divulgar no Instagram para atrair mais clientes. É tudo que você precisa para começar a faturar com confeitaria — do zero ao primeiro cliente."}
+                {"O Acesso Completo inclui 250 receitas de recheios cremosos (recheios com e sem fogo), mais videoaulas ensinando como vender suas receitas, como precificar seus produtos corretamente e como divulgar no Instagram para atrair mais clientes. É tudo que você precisa para começar a faturar com confeitaria — do zero ao primeiro cliente."}
               </p>
             </div>
 
