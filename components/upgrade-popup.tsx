@@ -49,7 +49,7 @@ export function UpgradePopup({
       });
     }
     window.location.href =
-      "https://www.ggcheckout.com/checkout/v2/YZdjit7Wh1dMX8FOAbHR"
+      "https://www.ggcheckout.com/checkout/v2/nc956KkPYmK5E5JTLhAG"
   }
 
   const handleUpgradeDecline = () => {
