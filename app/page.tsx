@@ -113,39 +113,93 @@ export default function SalesPage() {
         </div>
       </section>
 
-      {/* Oferta */}
+      {/* Planos */}
       <section className="py-16 px-4">
-        <div className="max-w-2xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-12">
-            {"O que você recebe"}
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-10">
+            Escolha seu acesso 👇
           </h2>
 
-          <div className="bg-white border-4 border-orange-300 rounded-2xl p-8 shadow-2xl mb-8">
-            <div className="space-y-4 mb-8">
-              <div className="flex items-start gap-3">
-                <Check className="h-6 w-6 text-orange-500 flex-shrink-0 mt-1" />
-                <p className="text-lg text-gray-800">
-                  {"Acesso imediato ao Guia Recheios Secretos "}
-                  <span className="font-bold text-orange-600">(20 receitas)</span>
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <Check className="h-6 w-6 text-orange-500 flex-shrink-0 mt-1" />
-                <p className="text-lg text-gray-800">Receitas simples e testadas</p>
-              </div>
-              <div className="flex items-start gap-3">
-                <Check className="h-6 w-6 text-orange-500 flex-shrink-0 mt-1" />
-                <p className="text-lg text-gray-800">{"Uso liberado para vender"}</p>
-              </div>
+          <div className="flex flex-col-reverse sm:flex-row gap-6 items-stretch">
+            {/* Card Basico */}
+            <div className="flex-1 bg-white border border-gray-200 rounded-2xl p-7 shadow-md flex flex-col">
+              <h3 className="text-xl font-bold text-gray-800 mb-1">Básico</h3>
+              <div className="text-4xl font-bold text-orange-600 mb-1">R$ 1,99</div>
+              <p className="text-gray-500 text-sm mb-6">pagamento único</p>
+              <ul className="space-y-3 mb-8 flex-1">
+                <li className="flex items-start gap-2 text-gray-700">
+                  <Check className="h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" />
+                  20 receitas de recheios cremosos
+                </li>
+                <li className="flex items-start gap-2 text-gray-700">
+                  <Check className="h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" />
+                  Sem fogo e sem forno
+                </li>
+                <li className="flex items-start gap-2 text-gray-700">
+                  <Check className="h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" />
+                  Acesso imediato pelo celular
+                </li>
+                <li className="flex items-start gap-2 text-gray-700">
+                  <Check className="h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" />
+                  Uso liberado para vender
+                </li>
+              </ul>
+              <BuyButton />
             </div>
 
-            <div className="text-center mb-8 bg-gradient-to-r from-orange-100 to-amber-100 rounded-xl py-6">
-              <div className="text-5xl font-bold text-orange-600 mb-2">{"R$ 1,99"}</div>
-              <p className="text-gray-600 text-lg">{"pagamento único"}</p>
+            {/* Card Completo */}
+            <div
+              className="flex-1 rounded-2xl p-7 shadow-2xl flex flex-col relative"
+              style={{
+                backgroundColor: "#2c1000",
+                border: "2px solid #c9a227",
+              }}
+            >
+              <div
+                className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-sm font-bold whitespace-nowrap"
+                style={{ backgroundColor: "#c9a227", color: "#2c1000" }}
+              >
+                ⭐ Mais completo
+              </div>
+              <h3 className="text-xl font-bold text-white mb-1 mt-2">Completo</h3>
+              <div className="text-4xl font-bold mb-1" style={{ color: "#c9a227" }}>
+                R$ 19,99
+              </div>
+              <p className="text-amber-300/70 text-sm mb-6">pagamento único</p>
+              <ul className="space-y-3 mb-8 flex-1">
+                {[
+                  "250 receitas de recheios cremosos",
+                  "Sem fogo e sem forno",
+                  "Rende 2kg cada receita",
+                  "Acesso imediato pelo celular",
+                  "Uso liberado para vender",
+                  "Videoaulas: como vender suas receitas",
+                  "Como precificar seus produtos",
+                  "Como divulgar no Instagram",
+                  "Suporte prioritário",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-amber-100">
+                    <span className="flex-shrink-0 mt-0.5">✅</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <a
+                href="https://www.ggcheckout.com/checkout/v2/nc956KkPYmK5E5JTLhAG"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full text-center font-bold text-lg py-4 rounded-xl transition-all hover:scale-105 block"
+                style={{ backgroundColor: "#c9a227", color: "#2c1000" }}
+              >
+                Quero o Completo →
+              </a>
             </div>
-
-            <BuyButton />
           </div>
+
+          {/* Garantia abaixo dos cards */}
+          <p className="text-center text-sm text-gray-600 mt-6">
+            🛡️ Garantia de 7 dias — não gostou, devolvemos 100%
+          </p>
         </div>
       </section>
 
