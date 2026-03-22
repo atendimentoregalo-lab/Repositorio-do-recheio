@@ -139,10 +139,6 @@ export default function SalesPage() {
                   <Check className="h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" />
                   Acesso imediato pelo celular
                 </li>
-                <li className="flex items-start gap-2 text-gray-700">
-                  <Check className="h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" />
-                  Uso liberado para vender
-                </li>
               </ul>
               <BuyButton />
             </div>
@@ -223,6 +219,15 @@ export default function SalesPage() {
           </h2>
 
           <div className="space-y-6 bg-white rounded-2xl p-8 shadow-md">
+            <div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">
+                {"O que está incluído no Acesso Completo?"}
+              </h3>
+              <p className="text-gray-700">
+                {"O Acesso Completo inclui 250 receitas de recheios cremosos (sem fogo e sem forno), mais videoaulas ensinando como vender suas receitas, como precificar seus produtos corretamente e como divulgar no Instagram para atrair mais clientes. É tudo que você precisa para começar a faturar com confeitaria — do zero ao primeiro cliente."}
+              </p>
+            </div>
+
             <div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">Recebo como?</h3>
               <p className="text-gray-700">
