@@ -47,7 +47,7 @@ export function UpgradePopup({
         currency: 'BRL'
       });
     }
-    window.location.href = 'https://www.ggcheckout.com/checkout/v2/nc956KkPYmK5E5JTLhAG'
+    window.location.href = 'https://ggcheckout.app/checkout/v2/YZdjit7Wh1dMX8FOAbHR'
   }
 
   const handleUpgradeDecline = () => {
