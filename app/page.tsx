@@ -213,7 +213,11 @@ export default function SalesPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-6 px-4 bg-white text-center border-t">
+      <footer className="py-8 px-4 bg-white text-center border-t">
+        <p className="text-base text-gray-700 italic mb-2">
+          {'"Jesus Cristo é o mesmo ontem, hoje e para sempre"'}
+        </p>
+        <p className="text-sm text-gray-500 mb-4">Hebreus 13:8</p>
         <p className="text-sm text-gray-600">
           {"© 2025 Recheios Secretos. Todos os direitos reservados."}
         </p>
