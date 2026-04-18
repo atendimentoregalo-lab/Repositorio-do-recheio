@@ -17,12 +17,14 @@ const PRODUTOS = {
 
 export async function POST(req: NextRequest) {
   try {
-    const { produto, nome, email } = await req.json()
+    const { produto, nome, email, valor: valorCustom } = await req.json()
 
     const prod = PRODUTOS[produto as keyof typeof PRODUTOS]
     if (!prod) {
       return NextResponse.json({ error: 'Produto inválido' }, { status: 400 })
     }
+
+    const valorFinal = valorCustom ? parseFloat(String(valorCustom).replace(',', '.')) : prod.valor
 
     const r = await fetch('https://api.mercadopago.com/v1/payments', {
       method: 'POST',
@@ -32,7 +34,7 @@ export async function POST(req: NextRequest) {
         'X-Idempotency-Key': `${email}-${produto}-${Date.now()}`,
       },
       body: JSON.stringify({
-        transaction_amount: prod.valor,
+        transaction_amount: valorFinal,
         description: prod.nome,
         payment_method_id: 'pix',
         payer: { email, first_name: nome || 'Cliente' },

@@ -68,7 +68,7 @@ function CheckoutContent() {
   // Timer regressivo
   useEffect(() => {
     if (etapa !== 'pix') return
-    const t = setInterval(() => setTimer(p => (p > 0 ? p - 1 : 0)), 1000)
+    const t = setInterval(() => setTimer((p: number) => (p > 0 ? p - 1 : 0)), 1000)
     return () => clearInterval(t)
   }, [etapa])
 
