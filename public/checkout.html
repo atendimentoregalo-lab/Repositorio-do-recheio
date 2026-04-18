@@ -96,13 +96,13 @@
   <p class="loading-text" id="loadingText">Gerando seu PIX...</p>
 </div>
 
-<!-- Banner urgência (oculto por padrão, ativado pelo admin) -->
-<div id="urgencyBanner" style="display:none;background:#e74c3c;color:white;text-align:center;padding:10px 16px;font-size:13px;font-weight:700;position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:center;gap:8px">
-  <span id="bannerText">⏰ Oferta por tempo limitado!</span>
-  <span id="bannerCountdown" style="font-size:15px;font-weight:900;letter-spacing:1px"></span>
-</div>
-
-<header class="wa-header">
+<!-- Sticky wrapper: banner + header stick together -->
+<div id="stickyTop" style="position:sticky;top:0;z-index:50">
+  <div id="urgencyBanner" style="display:none;color:white;text-align:center;padding:10px 16px;font-size:13px;font-weight:700;align-items:center;justify-content:center;gap:8px;background:#e74c3c">
+    <span id="bannerText">⏰ Oferta por tempo limitado!</span>
+    <span id="bannerCountdown" style="font-size:15px;font-weight:900;letter-spacing:1px;min-width:48px"></span>
+  </div>
+  <header class="wa-header" style="position:relative;top:auto">
   <button class="wa-back" onclick="history.back()" aria-label="Voltar">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
   </button>
@@ -112,7 +112,8 @@
     <div class="wa-header-sub" id="waHeaderSub">Finalizar pedido</div>
   </div>
   <svg class="wa-lock" width="18" height="18" viewBox="0 0 24 24" fill="rgba(255,255,255,.6)"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
-</header>
+  </header>
+</div><!-- /stickyTop -->
 
 <div class="content">
 
@@ -221,18 +222,21 @@
 
 <script>
   // ── Load config from admin dashboard (localStorage) ──────────────────
+  var _plano = new URLSearchParams(window.location.search).get('plano') || 'basic';
+  var _storageKey = _plano === 'premium' ? 'recheios_checkout_premium' : 'recheios_checkout_basic';
+  // fallback: migrate old key
   var _cfg = (function(){
-    try { return JSON.parse(localStorage.getItem('recheios_checkout_config') || '{}'); } catch(e){ return {}; }
+    try {
+      var v = localStorage.getItem(_storageKey);
+      if (!v) v = localStorage.getItem('recheios_checkout_config');
+      return JSON.parse(v || '{}');
+    } catch(e){ return {}; }
   })();
   var _prod  = _cfg.produto  || {};
   var _hdr   = _cfg.header   || {};
   var _ban   = _cfg.banner   || {};
   var _ok    = _cfg.sucesso  || {};
-  var _bumps = (_cfg.bumps && _cfg.bumps.length) ? _cfg.bumps : [
-    { nome:'Guia Premium — +230 receitas extras', desc:'100 recheios + 50 lanches + 50 sobremesas + 20 caldas + 20 tortas. Tudo pra vender mais!',
-      precoOriginal:'R$ 29,90', precoAdicional:'6.00', imagem:'', emoji:'📚',
-      acesso:'https://acesso-receitas-recheioss-basic1.lovable.app/' }
-  ];
+  var _bumps = (_cfg.bumps && Array.isArray(_cfg.bumps)) ? _cfg.bumps : [];
 
   // Apply config to DOM
   (function applyConfig() {
@@ -440,7 +444,8 @@
   function startBannerTimer(seconds) {
     var el = document.getElementById('bannerCountdown');
     if (!el) return;
-    document.getElementById('urgencyBanner').style.display = 'flex';
+    var ban = document.getElementById('urgencyBanner');
+    ban.style.display = 'flex';
     (function tick() {
       if (seconds <= 0) { el.textContent = '00:00'; return; }
       var m = Math.floor(seconds / 60);
