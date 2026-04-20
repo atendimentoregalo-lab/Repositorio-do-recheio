@@ -407,26 +407,25 @@
 
       <div class="form-card">
         <div class="ffield"><label class="flabel">Seu nome</label><input type="text" id="nomeInput" placeholder="Como posso te chamar?" class="finput" autocomplete="given-name"></div>
-        <div class="ffield"><label class="flabel">WhatsApp <span style="color:#ea580c;font-weight:700">📱 O material chega aqui!</span></label><input type="tel" id="telInput" placeholder="(11) 99999-9999" class="finput" inputmode="numeric" autocomplete="tel"></div>
-        <div class="ffield"><label class="flabel">Email</label><input type="email" id="emailInput" placeholder="seuemail@gmail.com" class="finput" inputmode="email" autocorrect="off" autocapitalize="none"></div>
+        <div class="ffield"><label class="flabel">E-mail <span style="color:#ea580c;font-weight:700">📧 O material chega aqui!</span></label><input type="email" id="emailInput" placeholder="seuemail@gmail.com" class="finput" inputmode="email" autocorrect="off" autocapitalize="none"></div>
       </div>
 
       <div class="bump-wrap">
         <div class="bump-hdr">🎁 Oferta especial — só aparece aqui!</div>
-        <div class="bump-body" id="bumpBody" onclick="toggleBump()">
+        <div id="bumpBody" class="bump-body" onclick="toggleBump()">
           <div class="bump-cb" id="bumpCb"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" id="bumpIcon" style="display:none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <div class="bump-img">🍰</div>
+          <div class="bump-img" id="bumpEmoji">🍰</div>
           <div class="bump-info">
-            <div class="bump-name">Sobremesas Sem Fogo — Coleção Completa</div>
-            <div class="bump-desc">+25 sobremesas geladas, mousses, pavês e muito mais!</div>
-            <div class="bump-prices"><span class="bump-from">R$ 19,90</span><span class="bump-price">+ R$ 4,90</span></div>
+            <div class="bump-name" id="bumpNome">—</div>
+            <div class="bump-desc" id="bumpDesc">—</div>
+            <div class="bump-prices"><span class="bump-from" id="bumpFrom">—</span><span class="bump-price" id="bumpPreco">—</span></div>
           </div>
         </div>
       </div>
 
       <div class="sub-card">
         <div class="sub-row"><span id="subNome">Pudim Sem Fogo — Básico</span><span id="subPreco">R$ 3,49</span></div>
-        <div id="subBumpLine" style="display:none"><div class="sub-row"><span>Sobremesas Sem Fogo</span><span style="color:#2563eb;font-weight:600">+ R$ 4,90</span></div></div>
+        <div id="subBumpLine" style="display:none"><div class="sub-row"><span id="subBumpNome">—</span><span style="color:#2563eb;font-weight:600" id="subBumpPreco">—</span></div></div>
         <div class="sub-total"><span style="font-size:16px;font-weight:700;color:#1c1917">Total</span><span style="font-size:20px;font-weight:800;color:#ea580c" id="subTotal">R$ 3,49</span></div>
       </div>
 
@@ -452,8 +451,8 @@
         <div class="success-wrap">
           <div class="success-ring">🍮</div>
           <div style="font-size:22px;font-weight:800;color:#1c1917;margin-bottom:8px">Pagamento confirmado! 🎉</div>
-          <div style="color:#78716c;font-size:14px;line-height:1.7">O PDF está chegando no seu<br><b style="color:#ea580c">WhatsApp agora! 📱</b></div>
-          <div style="background:#fff3e0;border-radius:14px;padding:14px 16px;margin-top:16px;font-size:13px;color:#92400e;line-height:1.6;border:1px solid #fed7aa">📲 Fique de olho no WhatsApp — Clara vai te enviar o material em instantes e você pode tirar dúvidas diretamente com ela!</div>
+          <div style="color:#78716c;font-size:14px;line-height:1.7">O link chegou no seu<br><b style="color:#ea580c">e-mail agora! 📧</b></div>
+          <div style="background:#fff3e0;border-radius:14px;padding:14px 16px;margin-top:16px;font-size:13px;color:#92400e;line-height:1.6;border:1px solid #fed7aa">📬 Verifique sua caixa de entrada (e o spam, por via das dúvidas). Dúvidas? Responda o e-mail que resolvo na hora 💛</div>
         </div>
       </div>
       <p style="text-align:center;color:#a8a29e;font-size:13px;margin-top:16px;line-height:1.8">Com carinho, <b style="color:#ea580c">Clara Aureliano</b> 💛<br>Dúvidas? Responda o email recebido.</p>
@@ -464,12 +463,27 @@
 
 <script>
 (function(){
-  var plano = 'basico', bumpOn = false, paymentId = null, pollInt = null, userEmail = '', userTel = '';
+  // ── CONFIG — edite aqui para mudar bumps sem mexer no resto ─────────────────
+  var CONFIG = {
+    bumps: [
+      {
+        id: 'sobremesas-bump',
+        nome: 'Sobremesas Sem Fogo — Coleção Completa',
+        desc: '+25 sobremesas geladas, mousses, pavês e muito mais!',
+        precoOriginal: 'R$ 19,90',
+        precoAdicional: 4.90,
+        emoji: '🍰'
+      }
+    ]
+  };
+  // ────────────────────────────────────────────────────────────────────────────
+
+  var plano = 'basico', bumpOn = false, paymentId = null, pollInt = null, userEmail = '';
   var PLANOS = {
     basico:  { nome:'Pudim Sem Fogo — Básico',  preco:3.49, api:'pudim-basic'   },
     premium: { nome:'Pudim Sem Fogo — Premium', preco:9.90, api:'pudim-premium' }
   };
-  var BUMP = 4.90;
+  var BUMP = CONFIG.bumps[0] ? CONFIG.bumps[0].precoAdicional : 0;
 
   // ── Urgency bar ──────────────────────────────────────────────────────────────
   (function(){
@@ -479,6 +493,20 @@
     bar.style.display='block';
     function tick(){var d=Math.max(0,end-Date.now()),m=Math.floor(d/60000),s=Math.floor((d%60000)/1000);cd.textContent=m+':'+(s<10?'0':'')+s;if(!d)clearInterval(t);}
     var t=setInterval(tick,1000);tick();
+  })();
+
+  // ── Inicializar bump via CONFIG ───────────────────────────────────────────────
+  (function(){
+    var bumpEl = document.getElementById('bumpBody');
+    if(!CONFIG.bumps.length){ if(bumpEl) bumpEl.closest('.bump-wrap').style.display='none'; return; }
+    var b = CONFIG.bumps[0];
+    document.getElementById('bumpEmoji').textContent = b.emoji;
+    document.getElementById('bumpNome').textContent  = b.nome;
+    document.getElementById('bumpDesc').textContent  = b.desc;
+    document.getElementById('bumpFrom').textContent  = b.precoOriginal;
+    document.getElementById('bumpPreco').textContent = '+ R$ '+b.precoAdicional.toFixed(2).replace('.',',');
+    document.getElementById('subBumpNome').textContent  = b.nome.split('—')[0].trim();
+    document.getElementById('subBumpPreco').textContent = '+ R$ '+b.precoAdicional.toFixed(2).replace('.',',');
   })();
 
   // ── Popup timer ──────────────────────────────────────────────────────────────
@@ -553,13 +581,11 @@
 
   window.gerarPix = async function(){
     var nome=document.getElementById('nomeInput').value.trim();
-    var tel=document.getElementById('telInput').value.replace(/\D/g,'');
     var email=document.getElementById('emailInput').value.trim();
-    ['nomeInput','telInput','emailInput'].forEach(function(id){document.getElementById(id).classList.remove('err');});
+    ['nomeInput','emailInput'].forEach(function(id){document.getElementById(id).classList.remove('err');});
     if(!nome){document.getElementById('nomeInput').classList.add('err');document.getElementById('nomeInput').focus();return;}
-    if(!tel||tel.length<10){document.getElementById('telInput').classList.add('err');document.getElementById('telInput').focus();return;}
     if(!email||!email.includes('@')){document.getElementById('emailInput').classList.add('err');document.getElementById('emailInput').focus();return;}
-    userEmail=email; userTel=tel;
+    userEmail=email;
     var p=PLANOS[plano], total=p.preco+(bumpOn?BUMP:0);
     document.getElementById('overlayText').textContent='Gerando seu PIX...';
     document.getElementById('overlay').classList.add('show');
@@ -587,12 +613,11 @@
   };
 
   function iniciarPolling(){
+    var p=PLANOS[plano];
+    var bumpsIds=bumpOn&&CONFIG.bumps.length?CONFIG.bumps.map(function(b){return b.id}).join(','):'';
+    var url='/api/checkout/status/'+paymentId+'?produto='+encodeURIComponent(p.api)+(bumpsIds?'&bumps='+encodeURIComponent(bumpsIds):'');
     pollInt=setInterval(async function(){
-      try{
-        var url='/api/checkout/status/'+paymentId+'?tel='+encodeURIComponent(userTel)+'&bump='+(bumpOn?'1':'0');
-        var r=await fetch(url),d=await r.json();
-        if(d.status==='approved'){clearInterval(pollInt);pagoComSucesso();}
-      }catch(e){}
+      try{var r=await fetch(url),d=await r.json();if(d.status==='approved'){clearInterval(pollInt);pagoComSucesso();}}catch(e){}
     },3000);
   }
 

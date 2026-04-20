@@ -1,11 +1,55 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { Resend } from 'resend'
+import { PRODUCTS } from '@/lib/products'
 
 const MP_TOKEN    = process.env.MP_ACCESS_TOKEN!
-const ENTREGA_URL = process.env.ENTREGA_ZAP_URL   // ex: https://xxxx.ngrok-free.app
+const RESEND_KEY  = process.env.RESEND_API_KEY
+const FROM_EMAIL  = process.env.RESEND_FROM ?? 'Clara Aureliano <onboarding@resend.dev>'
 const SUPABASE_FN = 'https://phyznlckywngdgphlyho.supabase.co/functions/v1/gg-webhook'
 
-// Dedup em memória — evita dupla entrega enquanto a instância está viva
 const entregues = new Set<string>()
+
+function buildEmailHtml(nome: string, itens: { nome: string; url: string }[]) {
+  const botoes = itens
+    .filter(i => i.url)
+    .map(
+      i => `
+      <div style="background:#fff8f0;border:1px solid #fed7aa;border-radius:12px;padding:16px 20px;margin-bottom:14px">
+        <div style="font-size:15px;font-weight:700;color:#1c1917;margin-bottom:10px">🍮 ${i.nome}</div>
+        <a href="${i.url}" style="display:inline-block;background:#ea580c;color:white;text-decoration:none;padding:11px 24px;border-radius:8px;font-size:14px;font-weight:700">
+          Acessar material →
+        </a>
+      </div>`
+    )
+    .join('')
+
+  return `<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#fffbf0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+  <div style="max-width:520px;margin:0 auto;padding:32px 16px">
+
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="font-size:52px">🍮</div>
+      <h1 style="font-size:22px;font-weight:800;color:#1c1917;margin:12px 0 4px">Pagamento confirmado! 🎉</h1>
+      <p style="color:#78716c;font-size:14px;margin:0">Oi ${nome}, seus materiais estão aqui embaixo 👇</p>
+    </div>
+
+    ${botoes || '<p style="color:#78716c;text-align:center">Seu acesso será enviado em breve.</p>'}
+
+    <div style="background:white;border-radius:12px;padding:16px 20px;margin-top:8px;font-size:13px;color:#92400e;line-height:1.6;border:1px solid #fed7aa">
+      ♾️ <strong>Acesso vitalício</strong> — guarde esse e-mail, os links não expiram nunca!
+    </div>
+
+    <p style="text-align:center;color:#a8a29e;font-size:13px;margin-top:24px;line-height:1.8">
+      Com carinho, <strong style="color:#ea580c">Clara Aureliano</strong> 💛<br>
+      Dúvidas? Responda esse e-mail que resolvo na hora.
+    </p>
+
+  </div>
+</body>
+</html>`
+}
 
 export async function GET(
   req: NextRequest,
@@ -22,29 +66,35 @@ export async function GET(
   if (data.status === 'approved' && !entregues.has(id)) {
     entregues.add(id)
 
-    const nome       = data.payer?.first_name || 'Amiga'
-    const email      = data.payer?.email || ''
-    const telefone   = req.nextUrl.searchParams.get('tel') || ''
-    const produto    = data.description || ''
-    const valor      = String((data.transaction_amount ?? 0).toFixed(2).replace('.', ','))
-    const comprouBump = req.nextUrl.searchParams.get('bump') === '1'
+    const nome    = data.payer?.first_name || 'Amiga'
+    const email   = data.payer?.email || ''
+    const produto = req.nextUrl.searchParams.get('produto') || ''
+    const bumpsQS = req.nextUrl.searchParams.get('bumps') || ''
+    const valor   = String((data.transaction_amount ?? 0).toFixed(2).replace('.', ','))
 
-    // Entrega via WhatsApp (servidor local com ngrok)
-    if (ENTREGA_URL && telefone) {
-      fetch(`${ENTREGA_URL}/entregar`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          nome,
-          telefone,
-          produto,
-          comprou_bump: comprouBump,
-          payment_id: id,
-        }),
-      }).catch(() => {})
+    // Monta lista de materiais comprados
+    const itens: { nome: string; url: string }[] = []
+    const prodInfo = PRODUCTS[produto]
+    if (prodInfo) itens.push({ nome: prodInfo.nome, url: prodInfo.deliveryUrl })
+    if (bumpsQS) {
+      bumpsQS.split(',').forEach(bumpId => {
+        const b = PRODUCTS[bumpId.trim()]
+        if (b) itens.push({ nome: b.nome, url: b.deliveryUrl })
+      })
     }
 
-    // Webhook Supabase — notificação de venda (server-side, sem CORS)
+    // Envia e-mail via Resend
+    if (RESEND_KEY && email) {
+      const resend = new Resend(RESEND_KEY)
+      resend.emails.send({
+        from: FROM_EMAIL,
+        to: email,
+        subject: '🍮 Seu Pudim Sem Fogo está aqui!',
+        html: buildEmailHtml(nome, itens),
+      }).catch(err => console.error('Resend error:', err))
+    }
+
+    // Webhook Supabase — notificação de venda
     fetch(SUPABASE_FN, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -52,7 +102,7 @@ export async function GET(
         event: 'pagamento_confirmado',
         email,
         valor,
-        produto,
+        produto: prodInfo?.nome ?? produto,
         payment_id: id,
         timestamp: new Date().toISOString(),
       }),

@@ -1,40 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { PRODUCTS } from '@/lib/products'
 
 const MP_TOKEN = process.env.MP_ACCESS_TOKEN!
-
-const PRODUTOS = {
-  basic: {
-    nome: 'Recheios Secretos Básico',
-    valor: 1.99,
-    acesso: 'https://acesso-receitas-recheioss-basic1.lovable.app/',
-  },
-  premium: {
-    nome: 'Recheios Secretos Premium',
-    valor: 7.99,
-    acesso: 'https://acesso-receitas-recheioss-basic1.lovable.app/',
-  },
-  'pudim-basic': {
-    nome: 'Pudim Sem Fogo — Básico',
-    valor: 3.49,
-    acesso: '',
-  },
-  'pudim-premium': {
-    nome: 'Pudim Sem Fogo — Premium',
-    valor: 9.90,
-    acesso: '',
-  },
-}
 
 export async function POST(req: NextRequest) {
   try {
     const { produto, nome, email, valor: valorCustom } = await req.json()
 
-    const prod = PRODUTOS[produto as keyof typeof PRODUTOS]
+    const prod = PRODUCTS[produto]
     if (!prod) {
       return NextResponse.json({ error: 'Produto inválido' }, { status: 400 })
     }
 
-    const valorFinal = valorCustom ? parseFloat(String(valorCustom).replace(',', '.')) : prod.valor
+    const valorFinal = valorCustom
+      ? parseFloat(String(valorCustom).replace(',', '.'))
+      : prod.valor
 
     const r = await fetch('https://api.mercadopago.com/v1/payments', {
       method: 'POST',
@@ -65,7 +45,7 @@ export async function POST(req: NextRequest) {
       qr_code: pix?.qr_code,
       qr_code_base64: pix?.qr_code_base64,
       valor: prod.valor,
-      acesso: prod.acesso,
+      acesso: prod.deliveryUrl,
     })
   } catch (e: any) {
     console.error(e)
