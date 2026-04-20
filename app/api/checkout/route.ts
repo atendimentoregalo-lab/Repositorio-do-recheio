@@ -13,6 +13,16 @@ const PRODUTOS = {
     valor: 7.99,
     acesso: 'https://acesso-receitas-recheioss-basic1.lovable.app/',
   },
+  'pudim-basic': {
+    nome: 'Pudim Sem Fogo — Básico',
+    valor: 3.49,
+    acesso: '',
+  },
+  'pudim-premium': {
+    nome: 'Pudim Sem Fogo — Premium',
+    valor: 9.90,
+    acesso: '',
+  },
 }
 
 export async function POST(req: NextRequest) {
