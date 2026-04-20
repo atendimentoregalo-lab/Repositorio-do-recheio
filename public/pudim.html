@@ -407,7 +407,8 @@
 
       <div class="form-card">
         <div class="ffield"><label class="flabel">Seu nome</label><input type="text" id="nomeInput" placeholder="Como posso te chamar?" class="finput" autocomplete="given-name"></div>
-        <div class="ffield"><label class="flabel">Email para receber o material</label><input type="email" id="emailInput" placeholder="seuemail@gmail.com" class="finput" inputmode="email" autocorrect="off" autocapitalize="none"></div>
+        <div class="ffield"><label class="flabel">WhatsApp <span style="color:#ea580c;font-weight:700">📱 O material chega aqui!</span></label><input type="tel" id="telInput" placeholder="(11) 99999-9999" class="finput" inputmode="numeric" autocomplete="tel"></div>
+        <div class="ffield"><label class="flabel">Email</label><input type="email" id="emailInput" placeholder="seuemail@gmail.com" class="finput" inputmode="email" autocorrect="off" autocapitalize="none"></div>
       </div>
 
       <div class="bump-wrap">
@@ -451,8 +452,8 @@
         <div class="success-wrap">
           <div class="success-ring">🍮</div>
           <div style="font-size:22px;font-weight:800;color:#1c1917;margin-bottom:8px">Pagamento confirmado! 🎉</div>
-          <div style="color:#78716c;font-size:14px;line-height:1.7">Seus materiais foram enviados para<br><span style="color:#ea580c;font-weight:700" id="successEmail"></span></div>
-          <div style="background:#fff3e0;border-radius:14px;padding:14px 16px;margin-top:16px;font-size:13px;color:#92400e;line-height:1.6;border:1px solid #fed7aa">♾️ <b>Acesso vitalício</b> — guarde o email, os links não expiram nunca!</div>
+          <div style="color:#78716c;font-size:14px;line-height:1.7">O PDF está chegando no seu<br><b style="color:#ea580c">WhatsApp agora! 📱</b></div>
+          <div style="background:#fff3e0;border-radius:14px;padding:14px 16px;margin-top:16px;font-size:13px;color:#92400e;line-height:1.6;border:1px solid #fed7aa">📲 Fique de olho no WhatsApp — Clara vai te enviar o material em instantes e você pode tirar dúvidas diretamente com ela!</div>
         </div>
       </div>
       <p style="text-align:center;color:#a8a29e;font-size:13px;margin-top:16px;line-height:1.8">Com carinho, <b style="color:#ea580c">Clara Aureliano</b> 💛<br>Dúvidas? Responda o email recebido.</p>
@@ -463,7 +464,7 @@
 
 <script>
 (function(){
-  var plano = 'basico', bumpOn = false, paymentId = null, pollInt = null, userEmail = '';
+  var plano = 'basico', bumpOn = false, paymentId = null, pollInt = null, userEmail = '', userTel = '';
   var PLANOS = {
     basico:  { nome:'Pudim Sem Fogo — Básico',  preco:3.49, api:'pudim-basic'   },
     premium: { nome:'Pudim Sem Fogo — Premium', preco:9.90, api:'pudim-premium' }
@@ -551,11 +552,14 @@
   };
 
   window.gerarPix = async function(){
-    var nome=document.getElementById('nomeInput').value.trim(), email=document.getElementById('emailInput').value.trim();
-    ['nomeInput','emailInput'].forEach(function(id){document.getElementById(id).classList.remove('err');});
+    var nome=document.getElementById('nomeInput').value.trim();
+    var tel=document.getElementById('telInput').value.replace(/\D/g,'');
+    var email=document.getElementById('emailInput').value.trim();
+    ['nomeInput','telInput','emailInput'].forEach(function(id){document.getElementById(id).classList.remove('err');});
     if(!nome){document.getElementById('nomeInput').classList.add('err');document.getElementById('nomeInput').focus();return;}
+    if(!tel||tel.length<10){document.getElementById('telInput').classList.add('err');document.getElementById('telInput').focus();return;}
     if(!email||!email.includes('@')){document.getElementById('emailInput').classList.add('err');document.getElementById('emailInput').focus();return;}
-    userEmail=email;
+    userEmail=email; userTel=tel;
     var p=PLANOS[plano], total=p.preco+(bumpOn?BUMP:0);
     document.getElementById('overlayText').textContent='Gerando seu PIX...';
     document.getElementById('overlay').classList.add('show');
@@ -584,19 +588,18 @@
 
   function iniciarPolling(){
     pollInt=setInterval(async function(){
-      try{var r=await fetch('/api/checkout/status/'+paymentId),d=await r.json();if(d.status==='approved'){clearInterval(pollInt);pagoComSucesso();}}catch(e){}
+      try{
+        var url='/api/checkout/status/'+paymentId+'?tel='+encodeURIComponent(userTel)+'&bump='+(bumpOn?'1':'0');
+        var r=await fetch(url),d=await r.json();
+        if(d.status==='approved'){clearInterval(pollInt);pagoComSucesso();}
+      }catch(e){}
     },3000);
   }
 
   function pagoComSucesso(){
     document.getElementById('qrSpinner').style.display='none';
     document.getElementById('qrStatusTxt').textContent='Pago! ✅';
-    document.getElementById('successEmail').textContent=userEmail;
     var p=PLANOS[plano],total=p.preco+(bumpOn?BUMP:0);
-    fetch('https://phyznlckywngdgphlyho.supabase.co/functions/v1/gg-webhook',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({event:'pagamento_confirmado',email:userEmail,valor:String(total.toFixed(2).replace('.',',')),
-        produto:'Pudim Sem Fogo '+(plano==='premium'?'Premium':'Básico'),payment_id:paymentId,timestamp:new Date().toISOString()})
-    }).catch(function(){});
     if(typeof fbq!=='undefined') fbq('track','Purchase',{value:total,currency:'BRL'});
     setTimeout(function(){mostrarTela('screen-success');},800);
   }
