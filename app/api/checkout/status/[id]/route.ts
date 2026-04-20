@@ -108,19 +108,22 @@ export async function GET(
       }).catch(err => console.error('Resend error:', err))
     }
 
-    // Webhook Supabase
+    // Webhook Supabase — notificação de venda confirmada
     fetch(SUPABASE_FN, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         event: 'pagamento_confirmado',
+        nome,
         email,
         valor,
         produto: prodInfo?.nome ?? produto,
         payment_id: id,
         timestamp: new Date().toISOString(),
       }),
-    }).catch(() => {})
+    }).then(async r => {
+      if (!r.ok) console.error('Webhook pagamento_confirmado error:', r.status, await r.text())
+    }).catch(e => console.error('Webhook fetch error:', e))
   }
 
   return NextResponse.json({ status: data.status })

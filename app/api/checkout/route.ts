@@ -1,7 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { PRODUCTS } from '@/lib/products'
 
-const MP_TOKEN = process.env.MP_ACCESS_TOKEN!
+const MP_TOKEN    = process.env.MP_ACCESS_TOKEN!
+const SUPABASE_FN = 'https://phyznlckywngdgphlyho.supabase.co/functions/v1/gg-webhook'
+
+async function notificar(payload: object) {
+  try {
+    const r = await fetch(SUPABASE_FN, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+    if (!r.ok) console.error('Webhook error:', r.status, await r.text())
+  } catch (e) {
+    console.error('Webhook fetch error:', e)
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -38,7 +52,18 @@ export async function POST(req: NextRequest) {
     }
 
     const data = await r.json()
-    const pix = data.point_of_interaction?.transaction_data
+    const pix  = data.point_of_interaction?.transaction_data
+
+    // Notifica PIX gerado (alguém chegou no checkout)
+    notificar({
+      event: 'pix_gerado',
+      nome: nome || 'Cliente',
+      email,
+      valor: valorFinal.toFixed(2).replace('.', ','),
+      produto: prod.nome,
+      payment_id: String(data.id),
+      timestamp: new Date().toISOString(),
+    })
 
     return NextResponse.json({
       payment_id: data.id,
