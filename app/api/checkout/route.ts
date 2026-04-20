@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { PRODUCTS } from '@/lib/products'
+import { kv } from '@vercel/kv'
 
 const MP_TOKEN    = process.env.MP_ACCESS_TOKEN!
 const SUPABASE_FN = 'https://phyznlckywngdgphlyho.supabase.co/functions/v1/gg-webhook'
@@ -53,6 +54,9 @@ export async function POST(req: NextRequest) {
 
     const data = await r.json()
     const pix  = data.point_of_interaction?.transaction_data
+
+    // Salva dados do comprador no KV (TTL 2h) para recuperar ao confirmar pagamento
+    kv.set(`buyer:${data.id}`, { nome: nome || 'Cliente', email }, { ex: 7200 }).catch(() => {})
 
     // Notifica PIX gerado (alguém chegou no checkout)
     notificar({
