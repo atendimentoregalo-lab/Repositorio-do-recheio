@@ -500,7 +500,9 @@
     var bumpEl = document.getElementById('bumpBody');
     if(!CONFIG.bumps.length){ if(bumpEl) bumpEl.closest('.bump-wrap').style.display='none'; return; }
     var b = CONFIG.bumps[0];
-    document.getElementById('bumpEmoji').textContent = b.emoji;
+    var bumpImgEl = document.getElementById('bumpEmoji');
+    if(b.imageUrl){ bumpImgEl.innerHTML='<img src="'+b.imageUrl+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:10px">'; }
+    else { bumpImgEl.textContent = b.emoji; }
     document.getElementById('bumpNome').textContent  = b.nome;
     document.getElementById('bumpDesc').textContent  = b.desc;
     document.getElementById('bumpFrom').textContent  = b.precoOriginal;

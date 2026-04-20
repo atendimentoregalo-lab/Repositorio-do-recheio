@@ -166,7 +166,7 @@ export default function AdminPudim() {
               </div>
 
               <div style={S.row2}>
-                <Field label="Emoji" value={bump.emoji} onChange={v => setBump(i, 'emoji', v)} placeholder="🍰" />
+                <Field label="Emoji (fallback)" value={bump.emoji} onChange={v => setBump(i, 'emoji', v)} placeholder="🍰" />
                 <Field label="ID único (sem espaços)" value={bump.id} onChange={v => setBump(i, 'id', v)} placeholder="sobremesas-bump" />
               </div>
               <Field label="Nome" value={bump.nome} onChange={v => setBump(i, 'nome', v)} placeholder="Sobremesas Sem Fogo — Coleção Completa" />
@@ -174,6 +174,21 @@ export default function AdminPudim() {
               <div style={S.row2}>
                 <Field label="Preço original (ex: R$ 19,90)" value={bump.precoOriginal} onChange={v => setBump(i, 'precoOriginal', v)} placeholder="R$ 19,90" />
                 <Field label="Preço adicional (R$)" type="number" value={bump.precoAdicional} onChange={v => setBump(i, 'precoAdicional', v)} placeholder="4.90" />
+              </div>
+              <div style={{ marginBottom: 12 }}>
+                <label style={S.label}>URL da imagem</label>
+                <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                  <input
+                    type="text"
+                    value={bump.imageUrl ?? ''}
+                    onChange={e => setBump(i, 'imageUrl', e.target.value)}
+                    placeholder="https://i.imgur.com/xxx.jpg"
+                    style={{ ...S.input, flex: 1 }}
+                  />
+                  {bump.imageUrl && (
+                    <img src={bump.imageUrl} alt="preview" style={{ width: 52, height: 52, borderRadius: 8, objectFit: 'cover', flexShrink: 0, border: '1.5px solid #e7e5e4' }} />
+                  )}
+                </div>
               </div>
               <Field label="Link de entrega (Google Drive)" value={bump.deliveryUrl} onChange={v => setBump(i, 'deliveryUrl', v)} placeholder="https://drive.google.com/file/d/..." />
               {bump.deliveryUrl && (

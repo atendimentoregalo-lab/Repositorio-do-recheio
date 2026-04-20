@@ -11,6 +11,7 @@ export type BumpConfig = {
   precoOriginal: string
   precoAdicional: number
   emoji: string
+  imageUrl: string
   deliveryUrl: string
 }
 
@@ -44,6 +45,7 @@ function defaultConfig(): PudimConfig {
         precoOriginal: 'R$ 19,90',
         precoAdicional: 4.90,
         emoji: '🍰',
+        imageUrl: '',
         deliveryUrl: '',
       },
     ],
