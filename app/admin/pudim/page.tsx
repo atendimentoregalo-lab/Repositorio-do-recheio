@@ -125,6 +125,13 @@ export default function AdminPudim() {
             <Field label="Preço (R$)" type="number" value={config.produtos['pudim-basic'].valor} onChange={v => setProd('pudim-basic', 'valor', v)} placeholder="3.49" />
             <div />
           </div>
+          <div style={{ marginBottom: 12 }}>
+            <label style={S.label}>Imagem do produto (URL)</label>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+              <input type="text" value={config.produtos['pudim-basic'].imageUrl ?? ''} onChange={e => setProd('pudim-basic', 'imageUrl', e.target.value)} placeholder="https://i.imgur.com/xxx.jpg" style={{ ...S.input, flex: 1 }} />
+              {config.produtos['pudim-basic'].imageUrl && <img src={config.produtos['pudim-basic'].imageUrl} alt="" style={{ width: 52, height: 52, borderRadius: 8, objectFit: 'cover', flexShrink: 0, border: '1.5px solid #e7e5e4' }} />}
+            </div>
+          </div>
           <Field label="Link de entrega (Google Drive)" value={config.produtos['pudim-basic'].deliveryUrl} onChange={v => setProd('pudim-basic', 'deliveryUrl', v)} placeholder="https://drive.google.com/file/d/..." />
           {config.produtos['pudim-basic'].deliveryUrl && (
             <a href={config.produtos['pudim-basic'].deliveryUrl} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: '#ea580c' }}>↗ Testar link</a>
@@ -138,6 +145,13 @@ export default function AdminPudim() {
           <div style={S.row2}>
             <Field label="Preço (R$)" type="number" value={config.produtos['pudim-premium'].valor} onChange={v => setProd('pudim-premium', 'valor', v)} placeholder="9.90" />
             <div />
+          </div>
+          <div style={{ marginBottom: 12 }}>
+            <label style={S.label}>Imagem do produto (URL)</label>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+              <input type="text" value={config.produtos['pudim-premium'].imageUrl ?? ''} onChange={e => setProd('pudim-premium', 'imageUrl', e.target.value)} placeholder="https://i.imgur.com/xxx.jpg" style={{ ...S.input, flex: 1 }} />
+              {config.produtos['pudim-premium'].imageUrl && <img src={config.produtos['pudim-premium'].imageUrl} alt="" style={{ width: 52, height: 52, borderRadius: 8, objectFit: 'cover', flexShrink: 0, border: '1.5px solid #e7e5e4' }} />}
+            </div>
           </div>
           <Field label="Link de entrega (Google Drive)" value={config.produtos['pudim-premium'].deliveryUrl} onChange={v => setProd('pudim-premium', 'deliveryUrl', v)} placeholder="https://drive.google.com/file/d/..." />
           {config.produtos['pudim-premium'].deliveryUrl && (

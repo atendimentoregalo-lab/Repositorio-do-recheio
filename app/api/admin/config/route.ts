@@ -17,8 +17,8 @@ export type BumpConfig = {
 
 export type PudimConfig = {
   produtos: {
-    'pudim-basic':   { nome: string; valor: number; deliveryUrl: string }
-    'pudim-premium': { nome: string; valor: number; deliveryUrl: string }
+    'pudim-basic':   { nome: string; valor: number; deliveryUrl: string; imageUrl: string }
+    'pudim-premium': { nome: string; valor: number; deliveryUrl: string; imageUrl: string }
   }
   bumps: BumpConfig[]
 }
@@ -30,11 +30,13 @@ function defaultConfig(): PudimConfig {
         nome: PRODUCTS['pudim-basic'].nome,
         valor: PRODUCTS['pudim-basic'].valor,
         deliveryUrl: PRODUCTS['pudim-basic'].deliveryUrl,
+        imageUrl: '',
       },
       'pudim-premium': {
         nome: PRODUCTS['pudim-premium'].nome,
         valor: PRODUCTS['pudim-premium'].valor,
         deliveryUrl: PRODUCTS['pudim-premium'].deliveryUrl,
+        imageUrl: '',
       },
     },
     bumps: [

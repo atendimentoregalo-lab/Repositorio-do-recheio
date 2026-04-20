@@ -397,7 +397,7 @@
 
     <div class="screen active" id="screen-email">
       <div style="background:white;border-radius:20px;padding:16px;box-shadow:0 2px 16px rgba(0,0,0,.06);margin-bottom:14px;display:flex;align-items:center;gap:12px">
-        <div style="font-size:32px">🍮</div>
+        <div id="ckImg" style="font-size:32px;width:52px;height:52px;display:flex;align-items:center;justify-content:center;flex-shrink:0">🍮</div>
         <div style="flex:1">
           <div style="font-size:15px;font-weight:700;color:#1c1917" id="ckNome">Pudim Sem Fogo — Básico</div>
           <div style="font-size:18px;font-weight:800;color:#ea580c;margin-top:2px" id="ckPreco">R$ 3,49</div>
@@ -463,27 +463,23 @@
 
 <script>
 (function(){
-  // ── CONFIG — edite aqui para mudar bumps sem mexer no resto ─────────────────
-  var CONFIG = {
-    bumps: [
-      {
-        id: 'sobremesas-bump',
-        nome: 'Sobremesas Sem Fogo — Coleção Completa',
-        desc: '+25 sobremesas geladas, mousses, pavês e muito mais!',
-        precoOriginal: 'R$ 19,90',
-        precoAdicional: 4.90,
-        emoji: '🍰'
-      }
-    ]
-  };
-  // ────────────────────────────────────────────────────────────────────────────
-
   var plano = 'basico', bumpOn = false, paymentId = null, pollInt = null, userEmail = '';
   var PLANOS = {
-    basico:  { nome:'Pudim Sem Fogo — Básico',  preco:3.49, api:'pudim-basic'   },
-    premium: { nome:'Pudim Sem Fogo — Premium', preco:9.90, api:'pudim-premium' }
+    basico:  { nome:'Pudim Sem Fogo — Básico',  preco:3.49, api:'pudim-basic',  img:'' },
+    premium: { nome:'Pudim Sem Fogo — Premium', preco:9.90, api:'pudim-premium', img:'' }
   };
-  var BUMP = CONFIG.bumps[0] ? CONFIG.bumps[0].precoAdicional : 0;
+  var CONFIG = { bumps: [] };
+  var BUMP = 0;
+
+  // ── Carrega config do servidor (bumps, preços, imagens) ──────────────────────
+  var configPromise = fetch('/api/admin/config').then(function(r){ return r.json(); }).then(function(d){
+    CONFIG = d;
+    BUMP = d.bumps[0] ? d.bumps[0].precoAdicional : 0;
+    var bas = d.produtos['pudim-basic'];
+    var pre = d.produtos['pudim-premium'];
+    if(bas){ PLANOS.basico.preco = bas.valor; PLANOS.basico.nome = bas.nome; PLANOS.basico.img = bas.imageUrl||''; }
+    if(pre){ PLANOS.premium.preco = pre.valor; PLANOS.premium.nome = pre.nome; PLANOS.premium.img = pre.imageUrl||''; }
+  }).catch(function(){});
 
   // ── Urgency bar ──────────────────────────────────────────────────────────────
   (function(){
@@ -495,21 +491,23 @@
     var t=setInterval(tick,1000);tick();
   })();
 
-  // ── Inicializar bump via CONFIG ───────────────────────────────────────────────
-  (function(){
-    var bumpEl = document.getElementById('bumpBody');
-    if(!CONFIG.bumps.length){ if(bumpEl) bumpEl.closest('.bump-wrap').style.display='none'; return; }
+  // ── Inicializar bump via CONFIG (chamado ao entrar no checkout) ──────────────
+  function inicializarBump(){
+    var bumpWrap = document.getElementById('bumpBody') && document.getElementById('bumpBody').closest('.bump-wrap');
+    if(!CONFIG.bumps.length){ if(bumpWrap) bumpWrap.style.display='none'; return; }
+    if(bumpWrap) bumpWrap.style.display='';
     var b = CONFIG.bumps[0];
+    BUMP = b.precoAdicional;
     var bumpImgEl = document.getElementById('bumpEmoji');
     if(b.imageUrl){ bumpImgEl.innerHTML='<img src="'+b.imageUrl+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:10px">'; }
-    else { bumpImgEl.textContent = b.emoji; }
+    else { bumpImgEl.textContent = b.emoji||'🎁'; }
     document.getElementById('bumpNome').textContent  = b.nome;
     document.getElementById('bumpDesc').textContent  = b.desc;
     document.getElementById('bumpFrom').textContent  = b.precoOriginal;
     document.getElementById('bumpPreco').textContent = '+ R$ '+b.precoAdicional.toFixed(2).replace('.',',');
     document.getElementById('subBumpNome').textContent  = b.nome.split('—')[0].trim();
     document.getElementById('subBumpPreco').textContent = '+ R$ '+b.precoAdicional.toFixed(2).replace('.',',');
-  })();
+  }
 
   // ── Popup timer ──────────────────────────────────────────────────────────────
   var popTimer = null;
@@ -548,10 +546,18 @@
   };
 
   function irParaCheckout(){
-    atualizarResumo();
-    document.getElementById('salesPage').style.display = 'none';
-    document.getElementById('checkoutPage').style.display = 'block';
-    window.scrollTo({top:0,behavior:'instant'});
+    configPromise.then(function(){
+      inicializarBump();
+      atualizarResumo();
+      // Imagem do produto no checkout
+      var p = PLANOS[plano];
+      var ckImg = document.getElementById('ckImg');
+      if(p.img){ ckImg.innerHTML='<img src="'+p.img+'" style="width:52px;height:52px;border-radius:10px;object-fit:cover">'; }
+      else { ckImg.textContent='🍮'; }
+      document.getElementById('salesPage').style.display = 'none';
+      document.getElementById('checkoutPage').style.display = 'block';
+      window.scrollTo({top:0,behavior:'instant'});
+    });
   }
   window.voltarVendas = function(){
     document.getElementById('checkoutPage').style.display = 'none';
