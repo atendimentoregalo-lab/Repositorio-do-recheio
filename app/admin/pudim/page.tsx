@@ -106,6 +106,9 @@ export default function AdminPudim() {
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           {saved && <span style={{ fontSize: 13, color: '#16a34a', fontWeight: 600 }}>✅ Salvo!</span>}
+          <button onClick={() => router.push('/admin/crm')} style={{ background:'none', border:'1.5px solid #e7e5e4', borderRadius:8, padding:'7px 14px', fontSize:13, color:'#78716c', cursor:'pointer', fontFamily:'inherit' }}>
+            📊 CRM
+          </button>
           <button onClick={save} disabled={saving} style={S.btn(saving ? '#fed7aa' : '#ea580c')}>
             {saving ? 'Salvando...' : 'Salvar tudo'}
           </button>

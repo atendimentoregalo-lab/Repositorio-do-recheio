@@ -3,6 +3,7 @@ import { Resend } from 'resend'
 import { PRODUCTS } from '@/lib/products'
 import { kv } from '@vercel/kv'
 import type { PudimConfig } from '@/app/api/admin/config/route'
+import { saveCustomer } from '@/app/api/admin/crm/route'
 
 const MP_TOKEN    = process.env.MP_ACCESS_TOKEN!
 const RESEND_KEY  = process.env.RESEND_API_KEY
@@ -107,6 +108,13 @@ export async function GET(
         html: buildEmailHtml(nome, itens),
       }).catch(err => console.error('Resend error:', err))
     }
+
+    // Salva no CRM
+    const bumpsArr = bumpsQS ? bumpsQS.split(',').filter(Boolean) : []
+    saveCustomer({
+      nome, email, produto, bumps: bumpsArr, valor,
+      payment_id: id, created_at: new Date().toISOString(),
+    }).catch(e => console.error('CRM save error:', e))
 
     // Webhook Supabase — notificação de venda confirmada
     fetch(SUPABASE_FN, {
