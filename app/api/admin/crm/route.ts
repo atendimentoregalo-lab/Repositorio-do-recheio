@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { kv } from '@vercel/kv'
+import { requireAdmin } from '@/lib/admin-auth'
 
 export type CrmCustomer = {
   nome: string
@@ -35,6 +36,8 @@ export async function saveCustomer(customer: CrmCustomer) {
 }
 
 export async function GET() {
+  const unauth = await requireAdmin()
+  if (unauth) return unauth
   try {
     const results: Record<CrmSegment, CrmCustomer[]> = {
       'basico': [], 'basico-bump': [], 'premium': [], 'premium-bump': []
@@ -51,6 +54,8 @@ export async function GET() {
 
 // DELETE — limpar segmento específico (uso interno)
 export async function DELETE(req: NextRequest) {
+  const unauth = await requireAdmin()
+  if (unauth) return unauth
   const { seg } = await req.json()
   if (seg) await kv.del(`crm:${seg}`)
   return NextResponse.json({ ok: true })

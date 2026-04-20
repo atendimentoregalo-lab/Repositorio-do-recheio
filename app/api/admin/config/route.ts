@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { kv } from '@vercel/kv'
 import { PRODUCTS } from '@/lib/products'
+import { requireAdmin } from '@/lib/admin-auth'
 
 const KV_KEY = 'pudim-checkout-config'
 
@@ -55,6 +56,8 @@ function defaultConfig(): PudimConfig {
 }
 
 export async function GET() {
+  const unauth = await requireAdmin()
+  if (unauth) return unauth
   try {
     const config = await kv.get<PudimConfig>(KV_KEY)
     return NextResponse.json(config ?? defaultConfig())
@@ -64,6 +67,8 @@ export async function GET() {
 }
 
 export async function PUT(req: NextRequest) {
+  const unauth = await requireAdmin()
+  if (unauth) return unauth
   try {
     const body = await req.json() as PudimConfig
     await kv.set(KV_KEY, body)

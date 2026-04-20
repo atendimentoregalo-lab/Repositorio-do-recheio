@@ -472,7 +472,7 @@
   var BUMP = 0;
 
   // ── Carrega config do servidor (bumps, preços, imagens) ──────────────────────
-  var configPromise = fetch('/api/admin/config').then(function(r){ return r.json(); }).then(function(d){
+  var configPromise = fetch('/api/checkout/config').then(function(r){ return r.json(); }).then(function(d){
     CONFIG = d;
     BUMP = d.bumps[0] ? d.bumps[0].precoAdicional : 0;
     var bas = d.produtos['pudim-basic'];
