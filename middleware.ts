@@ -11,7 +11,7 @@ async function makeToken(pass: string): Promise<string> {
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
-  if (!pathname.startsWith('/admin')) return NextResponse.next()
+  if (!pathname.startsWith('/admin') && pathname !== '/admin.html') return NextResponse.next()
   if (pathname === '/admin/login') return NextResponse.next()
 
   const token    = req.cookies.get('admin_token')?.value
@@ -24,4 +24,4 @@ export async function middleware(req: NextRequest) {
   return NextResponse.next()
 }
 
-export const config = { matcher: ['/admin/:path*'] }
+export const config = { matcher: ['/admin/:path*', '/admin.html'] }
