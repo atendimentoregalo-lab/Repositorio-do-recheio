@@ -8,13 +8,12 @@
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
     html{scroll-behavior:smooth}
-    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:linear-gradient(170deg,#fffbf0 0%,#fff3e0 40%,#fffbf0 100%);min-height:100vh;color:#1c1917}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:linear-gradient(170deg,#fffbf0 0%,#fff3e0 45%,#fffbf0 100%);min-height:100vh;color:#1c1917}
 
     /* ── Urgency Bar ── */
     #urgBar{display:none;position:sticky;top:0;z-index:100;background:linear-gradient(90deg,#c2410c,#ea580c);color:white;padding:10px 16px;text-align:center;font-size:13px;font-weight:700;letter-spacing:.3px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
-    #urgBar span.cd{display:inline-block;background:rgba(0,0,0,.25);border-radius:6px;padding:2px 10px;margin-left:6px;font-size:15px;font-weight:900;letter-spacing:2px;min-width:54px}
+    #urgBar .cd{display:inline-block;background:rgba(0,0,0,.25);border-radius:6px;padding:2px 10px;margin-left:6px;font-size:15px;font-weight:900;letter-spacing:2px;min-width:54px}
 
-    /* ── Max width wrapper ── */
     .wrap{max-width:600px;margin:0 auto;padding:0 16px}
 
     /* ── Hero ── */
@@ -25,64 +24,42 @@
     .hero .sub{font-size:17px;color:#57534e;line-height:1.6;margin-bottom:8px;font-weight:500}
     .hero .sub2{font-size:15px;color:#78716c;margin-bottom:32px}
 
-    /* Product images row */
-    .img-row{display:flex;justify-content:center;gap:16px;margin-bottom:32px}
+    .img-row{display:flex;justify-content:center;gap:16px;margin-bottom:28px}
     .img-circle{display:flex;flex-direction:column;align-items:center;gap:8px}
-    .img-circle .circle{width:96px;height:96px;border-radius:50%;border:4px solid white;box-shadow:0 4px 16px rgba(0,0,0,.12);overflow:hidden;background:#fff8f0;display:flex;align-items:center;justify-content:center;font-size:36px}
-    .img-circle .circle img{width:100%;height:100%;object-fit:cover}
-    .img-circle .circle.placeholder{border:3px dashed #fed7aa;background:#fffbf0;flex-direction:column;gap:4px;cursor:pointer}
-    .img-circle .circle.placeholder span{font-size:10px;color:#d97706;font-weight:600;text-align:center;padding:0 4px}
+    .img-circle .circle{width:96px;height:96px;border-radius:50%;border:4px solid white;box-shadow:0 4px 16px rgba(0,0,0,.14);overflow:hidden;background:#fff8f0}
+    .img-circle .circle img{width:100%;height:100%;object-fit:cover;display:block}
     .img-circle p{font-size:13px;color:#78716c;font-weight:600}
 
-    /* Social proof bar */
-    .proof-bar{background:white;border-radius:16px;padding:12px 20px;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:32px;max-width:380px;margin-left:auto;margin-right:auto}
+    .proof-bar{background:white;border-radius:16px;padding:12px 20px;display:inline-flex;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,.07);margin-bottom:32px}
     .proof-avatars{display:flex}
     .proof-avatars span{width:28px;height:28px;border-radius:50%;border:2px solid white;background:#fed7aa;display:flex;align-items:center;justify-content:center;font-size:13px;margin-left:-8px}
     .proof-avatars span:first-child{margin-left:0}
     .proof-bar p{font-size:13px;font-weight:600;color:#57534e}
     .proof-bar p b{color:#ea580c}
 
-    /* CTA Button */
-    .btn-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#ea580c,#c2410c);color:white;font-size:17px;font-weight:700;padding:16px 32px;border-radius:999px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(234,88,12,.4);transition:transform .15s,box-shadow .15s;width:100%;max-width:420px;text-decoration:none;letter-spacing:.3px}
+    .btn-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#ea580c,#c2410c);color:white;font-size:18px;font-weight:700;padding:17px 32px;border-radius:999px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(234,88,12,.4);transition:transform .15s,box-shadow .15s;width:100%;max-width:420px;letter-spacing:.3px}
     .btn-cta:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(234,88,12,.5)}
-    .btn-cta.full{max-width:100%}
     .btn-safe{font-size:11px;color:#a8a29e;margin-top:10px;text-align:center}
 
-    /* ── Sections ── */
     .section{padding:48px 16px}
-    .section.alt{background:rgba(255,255,255,.6);backdrop-filter:blur(4px)}
+    .section.alt{background:rgba(255,255,255,.65);backdrop-filter:blur(4px)}
     .section-tag{font-size:11px;font-weight:700;color:#ea580c;text-transform:uppercase;letter-spacing:.8px;text-align:center;margin-bottom:8px}
     .section-title{font-size:clamp(22px,6vw,34px);font-weight:800;text-align:center;color:#1c1917;margin-bottom:8px;line-height:1.25}
-    .section-sub{font-size:15px;color:#78716c;text-align:center;margin-bottom:32px;line-height:1.6}
+    .divider{width:48px;height:4px;background:linear-gradient(90deg,#ea580c,#d97706);border-radius:999px;margin:0 auto 28px}
 
-    /* White card */
-    .card{background:white;border-radius:20px;padding:24px;box-shadow:0 2px 16px rgba(0,0,0,.06);margin-bottom:16px}
-    .card.border-orange{border:2px solid #fed7aa}
-    .card.highlight{border:3px solid #ea580c;box-shadow:0 8px 32px rgba(234,88,12,.15)}
+    .card{background:white;border-radius:20px;padding:24px;box-shadow:0 2px 16px rgba(0,0,0,.06)}
 
-    /* Check item */
-    .check-item{display:flex;align-items:flex-start;gap:14px;padding:10px 0;border-bottom:1px solid #f5f5f4}
-    .check-item:last-child{border-bottom:none}
-    .check-icon{width:26px;height:26px;background:linear-gradient(135deg,#ea580c,#d97706);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-    .check-icon svg{width:14px;height:14px;stroke:white;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
-    .check-text{font-size:16px;color:#292524;line-height:1.5}
-    .check-text b{color:#ea580c}
-
-    /* Pain items */
     .pain-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid #f5f5f4}
     .pain-item:last-child{border-bottom:none}
-    .pain-x{width:24px;height:24px;background:#fee2e2;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;color:#dc2626;font-weight:900;margin-top:2px}
+    .pain-x{width:24px;height:24px;background:#fee2e2;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;color:#dc2626;font-weight:900;margin-top:2px}
     .pain-text{font-size:15px;color:#44403c;line-height:1.5}
 
-    /* Product mockup */
     .mockup-box{background:linear-gradient(135deg,#fff8f0,#fff3e0);border:2px dashed #fed7aa;border-radius:20px;padding:32px 20px;text-align:center;margin-bottom:16px}
     .mockup-box .emoji-big{font-size:80px;margin-bottom:12px;display:block;filter:drop-shadow(0 4px 12px rgba(0,0,0,.1))}
-    .mockup-box h3{font-size:20px;font-weight:800;color:#1c1917;margin-bottom:6px}
+    .mockup-box h3{font-size:20px;font-weight:800;color:#1c1917;margin-bottom:4px}
     .mockup-box p{font-size:13px;color:#ea580c;font-weight:600}
-    .mockup-box .placeholder-hint{font-size:11px;color:#d97706;background:#fff3e0;border-radius:8px;padding:6px 12px;display:inline-block;margin-top:8px;border:1px dashed #d97706}
+    .placeholder-hint{font-size:11px;color:#d97706;background:#fff3e0;border-radius:8px;padding:6px 12px;display:inline-block;margin-top:10px;border:1px dashed #d97706}
 
-    /* Value items */
-    .value-grid{display:flex;flex-direction:column;gap:0}
     .value-item{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid #f5f5f4}
     .value-item:last-child{border-bottom:none}
     .value-icon{width:44px;height:44px;border-radius:12px;background:#fff3e0;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
@@ -91,77 +68,84 @@
     .value-desc{font-size:13px;color:#78716c;margin-top:2px}
     .value-badge{font-size:11px;font-weight:700;color:#ea580c;background:#fff3e0;border-radius:999px;padding:3px 10px;white-space:nowrap;flex-shrink:0}
 
-    /* Plans */
-    .plan-card{border:2.5px solid #e7e5e4;border-radius:20px;padding:22px;background:white;cursor:pointer;transition:all .2s;position:relative;margin-bottom:14px}
-    .plan-card:hover{border-color:#fed7aa;box-shadow:0 4px 20px rgba(234,88,12,.1)}
-    .plan-card.selected{border-color:#ea580c;background:#fffbf5;box-shadow:0 4px 24px rgba(234,88,12,.2)}
-    .plan-badge-pop{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#ea580c,#c2410c);color:white;font-size:11px;font-weight:700;padding:5px 18px;border-radius:999px;letter-spacing:.5px;white-space:nowrap;box-shadow:0 2px 8px rgba(234,88,12,.4)}
-    .plan-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-    .plan-radio{width:24px;height:24px;border:2.5px solid #d6d3d1;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
-    .plan-card.selected .plan-radio{background:#ea580c;border-color:#ea580c}
-    .plan-radio-dot{width:8px;height:8px;background:white;border-radius:50%;opacity:0;transition:opacity .15s}
-    .plan-card.selected .plan-radio-dot{opacity:1}
-    .plan-name{font-size:18px;font-weight:800;color:#1c1917;flex:1}
-    .plan-prices{text-align:right}
-    .plan-from{font-size:12px;color:#a8a29e;text-decoration:line-through}
-    .plan-price{font-size:26px;font-weight:800;color:#ea580c;line-height:1}
-    .plan-feats{display:flex;flex-direction:column;gap:8px}
-    .plan-feat{display:flex;align-items:center;gap:8px;font-size:14px;color:#44403c}
-    .plan-feat-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
-    .plan-feat b{color:#ea580c}
+    /* Price highlight */
+    .price-box{background:linear-gradient(135deg,#fff3e0,#ffe8cc);border-radius:20px;padding:28px 20px;text-align:center;border:2px solid #fed7aa;margin:0 auto}
+    .price-box .from{font-size:15px;color:#a8a29e;text-decoration:line-through;margin-bottom:4px}
+    .price-box .price{font-size:52px;font-weight:900;color:#ea580c;line-height:1;margin-bottom:6px}
+    .price-box .pmt{font-size:14px;color:#78716c}
 
-    /* Order bump */
-    .bump-wrap{border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.06);margin-bottom:16px}
-    .bump-header{background:linear-gradient(135deg,#1d4ed8,#2563eb);padding:11px 18px;text-align:center;color:white;font-size:13px;font-weight:700;letter-spacing:.3px}
-    .bump-body{background:white;display:flex;align-items:flex-start;gap:14px;padding:16px;cursor:pointer;transition:background .15s;user-select:none}
-    .bump-body.selected{background:#eff6ff}
-    .bump-cb{width:24px;height:24px;border:2.5px solid #d6d3d1;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;background:white;margin-top:2px}
-    .bump-body.selected .bump-cb{background:#2563eb;border-color:#2563eb}
-    .bump-img{width:68px;height:68px;border-radius:12px;background:#eff6ff;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;border:2px dashed #bfdbfe}
-    .bump-info{flex:1;min-width:0}
-    .bump-name{font-size:14px;font-weight:700;color:#1c1917;margin-bottom:4px;line-height:1.3}
-    .bump-desc{font-size:12px;color:#78716c;line-height:1.4;margin-bottom:8px}
-    .bump-prices{display:flex;align-items:center;gap:8px}
-    .bump-from{font-size:12px;color:#a8a29e;text-decoration:line-through}
-    .bump-price{font-size:16px;font-weight:700;color:#2563eb}
-
-    /* Testimonials */
-    .testi{background:white;border-radius:16px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,.05);margin-bottom:12px}
-    .testi-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
-    .testi-av{width:42px;height:42px;border-radius:50%;background:#fff3e0;display:flex;align-items:center;justify-content:center;font-size:22px;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,.1);overflow:hidden;flex-shrink:0}
-    .testi-av img{width:100%;height:100%;object-fit:cover}
-    .testi-av.placeholder{border:2px dashed #fed7aa}
-    .testi-meta{flex:1}
-    .testi-name{font-size:14px;font-weight:700;color:#1c1917}
-    .testi-stars{color:#f59e0b;font-size:13px;margin-top:1px}
-    .testi-text{font-size:14px;color:#57534e;line-height:1.6}
-
-    /* Guarantee */
     .guarantee{display:flex;align-items:center;justify-content:center;gap:14px;background:#f0fdf4;border:2px solid #86efac;border-radius:999px;padding:14px 24px;max-width:480px;margin:0 auto}
-    .guarantee-icon{font-size:32px;flex-shrink:0}
     .guarantee p{font-size:14px;color:#14532d;font-weight:600;line-height:1.4}
 
-    /* FAQ */
     .faq-item{padding:18px 0;border-bottom:1px solid #f5f5f4}
     .faq-item:last-child{border-bottom:none}
     .faq-q{font-size:15px;font-weight:700;color:#1c1917;margin-bottom:6px}
     .faq-a{font-size:14px;color:#78716c;line-height:1.6}
 
-    /* Subtotal */
+    /* ── Upgrade Popup ── */
+    #upgradeOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
+    #upgradeOverlay.show{display:flex}
+    #upgradeModal{background:linear-gradient(160deg,white,#fff8f0,white);border-radius:28px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.3);border:4px solid #fed7aa;animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
+    @keyframes popIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+    .popup-header{background:linear-gradient(135deg,#dc2626,#ea580c);padding:28px 24px;border-radius:22px 22px 0 0;text-align:center;position:relative}
+    .popup-close{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.2);border:none;border-radius:50%;width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;transition:background .15s}
+    .popup-close:hover{background:rgba(0,0,0,.4)}
+    .popup-timer{background:rgba(0,0,0,.3);border:2px solid rgba(255,255,255,.3);border-radius:14px;display:inline-flex;align-items:center;gap:10px;padding:10px 18px;margin-top:16px}
+    .popup-body{padding:24px}
+    .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+    .compare-card{border-radius:16px;padding:16px;text-align:center;border:2px solid #e7e5e4}
+    .compare-card.basic{background:#f5f5f4}
+    .compare-card.premium{background:linear-gradient(135deg,#fff3e0,#ffe8cc);border-color:#ea580c;border-width:3px;transform:scale(1.04);box-shadow:0 4px 20px rgba(234,88,12,.2)}
+    .compare-card .num{font-size:32px;font-weight:900;margin-bottom:4px}
+    .compare-card .lbl{font-size:13px;font-weight:600}
+    .compare-card.basic .num{color:#78716c}
+    .compare-card.premium .num{color:#ea580c}
+    .popup-what{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-radius:16px;padding:20px;margin-bottom:20px;border:2px solid #86efac}
+    .popup-what-item{display:flex;align-items:flex-start;gap:10px;padding:8px;background:white;border-radius:10px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+    .popup-what-item:last-child{margin-bottom:0}
+    .popup-check{width:26px;height:26px;background:#ea580c;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:white;font-size:13px;font-weight:900}
+    .popup-price-box{background:linear-gradient(135deg,#ea580c,#c2410c);border-radius:18px;padding:22px;text-align:center;margin-bottom:20px;box-shadow:0 4px 20px rgba(234,88,12,.3)}
+    .btn-upgrade-yes{width:100%;background:linear-gradient(135deg,#16a34a,#15803d);color:white;font-size:16px;font-weight:700;padding:18px;border-radius:16px;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(22,163,74,.3);transition:transform .15s;margin-bottom:12px}
+    .btn-upgrade-yes:hover{transform:translateY(-2px)}
+    .btn-upgrade-no{width:100%;background:white;border:2px solid #e7e5e4;color:#78716c;font-size:13px;font-weight:600;padding:14px;border-radius:12px;cursor:pointer;transition:background .15s}
+    .btn-upgrade-no:hover{background:#f5f5f4}
+
+    /* ── Checkout ── */
+    .overlay{position:fixed;inset:0;background:rgba(255,255,255,.92);display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;z-index:300}
+    .overlay.show{display:flex}
+    .spinner-big{width:48px;height:48px;border:3px solid #e7e5e4;border-top-color:#ea580c;border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    #checkoutPage{display:none;min-height:100vh}
+    .ck-header{position:sticky;top:0;z-index:60;background:linear-gradient(135deg,#ea580c,#c2410c);padding:12px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 12px rgba(234,88,12,.3)}
+
+    .form-card{background:white;border-radius:20px;padding:22px;box-shadow:0 2px 16px rgba(0,0,0,.06);margin-bottom:14px}
+    .flabel{display:block;font-size:12px;font-weight:700;color:#78716c;margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
+    .finput{width:100%;padding:14px 16px;border:2px solid #e7e5e4;border-radius:12px;font-size:16px;outline:none;transition:border-color .2s;-webkit-appearance:none;color:#1c1917}
+    .finput:focus{border-color:#ea580c}
+    .finput.err{border-color:#dc2626}
+    .ffield+.ffield{margin-top:14px}
+
+    .bump-wrap{border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.06);margin-bottom:14px}
+    .bump-hdr{background:linear-gradient(135deg,#1d4ed8,#2563eb);padding:11px 18px;text-align:center;color:white;font-size:13px;font-weight:700}
+    .bump-body{background:white;display:flex;align-items:flex-start;gap:14px;padding:16px;cursor:pointer;transition:background .15s;user-select:none}
+    .bump-body.on{background:#eff6ff}
+    .bump-cb{width:24px;height:24px;border:2.5px solid #d6d3d1;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;background:white;margin-top:2px}
+    .bump-body.on .bump-cb{background:#2563eb;border-color:#2563eb}
+    .bump-img{width:64px;height:64px;border-radius:12px;background:#eff6ff;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;border:2px dashed #bfdbfe}
+    .bump-info .bump-name{font-size:14px;font-weight:700;color:#1c1917;margin-bottom:4px;line-height:1.3}
+    .bump-info .bump-desc{font-size:12px;color:#78716c;line-height:1.4;margin-bottom:8px}
+    .bump-prices{display:flex;align-items:center;gap:8px}
+    .bump-from{font-size:12px;color:#a8a29e;text-decoration:line-through}
+    .bump-price{font-size:16px;font-weight:700;color:#2563eb}
+
     .sub-card{background:white;border-radius:16px;padding:16px 18px;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-    .sub-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:14px;color:#78716c}
-    .sub-row:last-child{margin-bottom:0}
+    .sub-row{display:flex;justify-content:space-between;font-size:14px;color:#78716c;margin-bottom:8px}
     .sub-total{border-top:1.5px solid #f5f5f4;margin-top:10px;padding-top:10px;display:flex;justify-content:space-between;align-items:center}
 
-    /* Form */
-    .form-card{background:white;border-radius:20px;padding:22px;box-shadow:0 2px 16px rgba(0,0,0,.06);margin-bottom:14px}
-    .form-card .label{display:block;font-size:12px;font-weight:700;color:#78716c;margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
-    .form-card input{width:100%;padding:14px 16px;border:2px solid #e7e5e4;border-radius:12px;font-size:16px;outline:none;transition:border-color .2s;-webkit-appearance:none;color:#1c1917}
-    .form-card input:focus{border-color:#ea580c}
-    .form-card input.err{border-color:#dc2626}
-    .form-field+.form-field{margin-top:14px}
+    .btn-pix{width:100%;background:linear-gradient(135deg,#ea580c,#c2410c);color:white;font-size:17px;font-weight:700;padding:17px;border-radius:999px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(234,88,12,.35);transition:opacity .2s}
+    .btn-pix:disabled{opacity:.5;cursor:default}
 
-    /* PIX / Success screens */
     .screen{display:none}
     .screen.active{display:block}
     .qr-wrap{display:flex;flex-direction:column;align-items:center;gap:16px}
@@ -169,7 +153,6 @@
     .qr-frame img{width:200px;height:200px;display:block}
     .qr-status{display:flex;align-items:center;gap:8px;color:#78716c;font-size:14px}
     .spinner{width:16px;height:16px;border:2px solid #e7e5e4;border-top-color:#ea580c;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
-    @keyframes spin{to{transform:rotate(360deg)}}
     .copy-row{display:flex;gap:8px;width:100%}
     .copy-inp{flex:1;padding:11px 14px;border:2px solid #e7e5e4;border-radius:12px;font-size:12px;color:#78716c;background:#fafaf9;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
     .btn-copy{background:none;border:2px solid #ea580c;color:#ea580c;border-radius:12px;padding:0 16px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;transition:all .15s}
@@ -178,21 +161,8 @@
     .pix-tip{background:#fffbf0;border-radius:14px;padding:14px 16px;display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#92400e;line-height:1.5;margin-bottom:12px;border:1px solid #fed7aa}
     .success-wrap{text-align:center;padding:12px 0 20px}
     .success-ring{width:90px;height:90px;background:#fff3e0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:48px;margin-bottom:18px;box-shadow:0 4px 20px rgba(234,88,12,.2)}
-    .success-title{font-size:22px;font-weight:800;color:#1c1917;margin-bottom:8px}
-    .success-sub{color:#78716c;font-size:14px;line-height:1.7}
-    .success-email{color:#ea580c;font-weight:700}
-    .access-row{background:#fff3e0;border-radius:14px;padding:14px 16px;margin-top:16px;font-size:13px;color:#92400e;line-height:1.6;border:1px solid #fed7aa}
 
-    /* Loading overlay */
-    .overlay{position:fixed;inset:0;background:rgba(255,255,255,.92);display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;z-index:200}
-    .overlay.show{display:flex}
-    .spinner-big{width:48px;height:48px;border:3px solid #e7e5e4;border-top-color:#ea580c;border-radius:50%;animation:spin .8s linear infinite}
-
-    /* Footer */
     .footer{text-align:center;padding:32px 16px 24px;color:#a8a29e;font-size:13px;line-height:2;border-top:1px solid #f5f5f4}
-
-    /* Divider */
-    .divider{width:48px;height:4px;background:linear-gradient(90deg,#ea580c,#d97706);border-radius:999px;margin:0 auto 24px}
   </style>
 </head>
 <body>
@@ -203,88 +173,131 @@
   <p style="color:#78716c;font-size:14px" id="overlayText">Gerando seu PIX...</p>
 </div>
 
+<!-- Upgrade Popup -->
+<div id="upgradeOverlay">
+  <div id="upgradeModal">
+    <div class="popup-header">
+      <button class="popup-close" onclick="fecharPopup()" id="popupClose">✕</button>
+      <div style="font-size:56px;margin-bottom:8px">🤯</div>
+      <h2 style="color:white;font-size:28px;font-weight:900;margin-bottom:6px">ESPERA!</h2>
+      <p style="color:rgba(255,255,255,.9);font-size:16px;font-weight:600">Você está prestes a perder isso...</p>
+      <div class="popup-timer">
+        <span style="font-size:20px">⏰</span>
+        <div>
+          <div style="font-size:10px;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px">Oferta expira em</div>
+          <div style="font-size:26px;font-weight:900;color:white;letter-spacing:2px" id="popupCD">07:30</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="popup-body">
+      <p style="text-align:center;font-size:20px;font-weight:800;color:#1c1917;margin-bottom:8px;line-height:1.3">Imagine ter acesso a <span style="color:#ea580c;font-size:24px">50 receitas + guia de vendas</span> em vez de apenas 30...</p>
+      <p style="text-align:center;font-size:14px;color:#78716c;margin-bottom:20px">Por menos de <b>R$ 0,20 por receita</b></p>
+
+      <div class="compare-grid">
+        <div class="compare-card basic">
+          <div style="font-size:11px;font-weight:700;color:#78716c;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">BÁSICO</div>
+          <div class="num">30</div>
+          <div class="lbl" style="color:#78716c">receitas</div>
+        </div>
+        <div class="compare-card premium">
+          <div style="font-size:11px;font-weight:700;color:#ea580c;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;animation:pulse 1.5s infinite">⭐ PREMIUM</div>
+          <div class="num">50+</div>
+          <div class="lbl" style="color:#ea580c;font-weight:700">receitas + bônus</div>
+        </div>
+      </div>
+
+      <div class="popup-what">
+        <p style="font-size:15px;font-weight:700;color:#1c1917;margin-bottom:12px;text-align:center">🎁 Tudo que você leva no Premium:</p>
+        <div class="popup-what-item">
+          <div class="popup-check">✓</div>
+          <div><b style="font-size:14px;color:#1c1917">50+ receitas de pudim sem fogo</b><br><span style="font-size:12px;color:#78716c">Clássico, chocolate, maracujá, paçoca, leite ninho e mais</span></div>
+        </div>
+        <div class="popup-what-item">
+          <div class="popup-check">✓</div>
+          <div><b style="font-size:14px;color:#1c1917">11 caldas irresistíveis</b><br><span style="font-size:12px;color:#78716c">Que fazem o cliente pedir BIS toda vez</span></div>
+        </div>
+        <div class="popup-what-item">
+          <div class="popup-check">✓</div>
+          <div><b style="font-size:14px;color:#1c1917">Receitas gourmet exclusivas</b><br><span style="font-size:12px;color:#78716c">Versões premium para cobrar mais</span></div>
+        </div>
+        <div class="popup-what-item">
+          <div class="popup-check" style="background:#16a34a">★</div>
+          <div><b style="font-size:14px;color:#16a34a">Guia: como vender e precificar</b><br><span style="font-size:12px;color:#78716c">Como ganhar dinheiro do zero com pudim</span></div>
+        </div>
+      </div>
+
+      <div class="popup-price-box">
+        <div style="font-size:13px;color:rgba(255,255,255,.7);text-decoration:line-through;margin-bottom:4px">De R$ 47,00</div>
+        <div style="font-size:52px;font-weight:900;color:white;line-height:1;margin-bottom:8px;text-shadow:0 2px 8px rgba(0,0,0,.2)">R$ 9,90</div>
+        <div style="display:inline-block;background:rgba(0,0,0,.2);border-radius:999px;padding:6px 18px;font-size:13px;font-weight:700;color:white">🔥 Apenas nesta tela</div>
+      </div>
+
+      <button class="btn-upgrade-yes" onclick="escolherPremium()">
+        ✅ SIM! Quero o pacote completo por R$ 9,90
+      </button>
+      <button class="btn-upgrade-no" onclick="escolherBasico()">
+        Não, prefiro continuar só as receitas básicas por R$ 3,49
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- Urgency Bar -->
 <div id="urgBar">
   ⏰ Oferta especial termina em <span class="cd" id="urgCD">12:00</span>
 </div>
 
-<!-- ═══════════ SALES PAGE ═══════════ -->
+<!-- ═══ SALES PAGE ═══ -->
 <div id="salesPage">
 
-  <!-- Hero -->
   <section class="hero">
-    <div class="wrap" style="text-align:center">
+    <div class="wrap">
       <div class="hero-tag">✨ Método Exclusivo • Clara Aureliano</div>
-      <h1>Pudim Sem Fogo — <em>Cremoso, Lisinho</em> e Irresistível 🍮</h1>
-      <p class="sub">Sem banho-maria, sem forno, sem ovo — fica pronto e vai direto pra geladeira</p>
+      <h1>Pudim Sem Fogo — <em>Cremoso, Lisinho</em> e Sem Erro 🍮</h1>
+      <p class="sub">Sem banho-maria, sem forno, sem ovo — vai direto pra geladeira</p>
       <p class="sub2">Mesmo que você nunca tenha feito um pudim na vida</p>
 
-      <!-- Product images -->
       <div class="img-row">
         <div class="img-circle">
-          <div class="circle placeholder">
-            <span style="font-size:24px">🍮</span>
-            <span>Clássico</span>
-          </div>
+          <div class="circle"><img src="https://i.imgur.com/5pg519e.jpeg" alt="Pudim Tradicional" loading="eager"></div>
           <p>Tradicional</p>
         </div>
         <div class="img-circle">
-          <div class="circle placeholder">
-            <span style="font-size:24px">🍫</span>
-            <span>Chocolate</span>
-          </div>
+          <div class="circle"><img src="https://i.imgur.com/Ru7Ayl1.jpeg" alt="Pudim de Chocolate" loading="eager"></div>
           <p>Chocolate</p>
         </div>
         <div class="img-circle">
-          <div class="circle placeholder">
-            <span style="font-size:24px">🥛</span>
-            <span>Leite Ninho</span>
-          </div>
-          <p>Leite Ninho</p>
+          <div class="circle"><img src="https://i.imgur.com/bQeWEz6.jpeg" alt="Pudim de Paçoca" loading="eager"></div>
+          <p>Paçoca</p>
         </div>
       </div>
 
-      <!-- Social proof -->
-      <div class="proof-bar">
-        <div class="proof-avatars">
-          <span>👩</span><span>👩</span><span>👩</span>
+      <div style="display:flex;justify-content:center">
+        <div class="proof-bar">
+          <div class="proof-avatars"><span>👩</span><span>👩</span><span>👩</span></div>
+          <p><b>+2.400 pessoas</b> compraram hoje</p>
         </div>
-        <p><b>+2.400 pessoas</b> compraram hoje</p>
       </div>
-
-      <button class="btn-cta" onclick="irParaPlanos()">
-        🍮 Quero o Método Agora!
-      </button>
-      <p class="btn-safe">🔒 Pagamento seguro · Acesso imediato · PIX</p>
+      <div style="margin-top:28px">
+        <button class="btn-cta" onclick="abrirPopup()">🍮 Quero o Método Agora!</button>
+        <p class="btn-safe">🔒 Pagamento seguro · Acesso imediato · PIX</p>
+      </div>
     </div>
   </section>
 
-  <!-- Pain -->
   <section class="section alt">
     <div class="wrap">
       <p class="section-tag">Você se identifica?</p>
       <h2 class="section-title">Chega de pudim com furinho 😩</h2>
       <div class="divider"></div>
       <div class="card">
-        <div class="pain-item">
-          <div class="pain-x">✕</div>
-          <p class="pain-text">Pudim saiu com aqueles <b>furinhos chatos</b> que arruínam tudo</p>
-        </div>
-        <div class="pain-item">
-          <div class="pain-x">✕</div>
-          <p class="pain-text">Perdeu horas no <b>banho-maria</b> e o resultado foi decepcionante</p>
-        </div>
-        <div class="pain-item">
-          <div class="pain-x">✕</div>
-          <p class="pain-text">Gastou gás, tempo e o pudim <b>não desenformou direito</b></p>
-        </div>
-        <div class="pain-item">
-          <div class="pain-x">✕</div>
-          <p class="pain-text">Tentou várias receitas da internet e <b>nenhuma funcionou</b></p>
-        </div>
+        <div class="pain-item"><div class="pain-x">✕</div><p class="pain-text">Pudim saiu com aqueles <b>furinhos chatos</b> que arruínam tudo</p></div>
+        <div class="pain-item"><div class="pain-x">✕</div><p class="pain-text">Perdeu horas no <b>banho-maria</b> e o resultado foi decepcionante</p></div>
+        <div class="pain-item"><div class="pain-x">✕</div><p class="pain-text">Gastou gás e tempo e o pudim <b>não desenformou direito</b></p></div>
+        <div class="pain-item"><div class="pain-x">✕</div><p class="pain-text">Tentou várias receitas da internet e <b>nenhuma funcionou</b></p></div>
       </div>
-
-      <div style="background:linear-gradient(135deg,#fff3e0,#fff8f0);border-radius:20px;padding:24px;text-align:center;border:2px solid #fed7aa">
+      <div style="background:linear-gradient(135deg,#fff8f0,#fff3e0);border-radius:20px;padding:24px;text-align:center;border:2px solid #fed7aa;margin-top:16px">
         <div style="font-size:40px;margin-bottom:12px">💡</div>
         <p style="font-size:17px;font-weight:700;color:#1c1917;line-height:1.4;margin-bottom:8px">E se existisse um jeito de fazer pudim perfeito toda vez — sem ligar o fogão?</p>
         <p style="font-size:14px;color:#78716c;line-height:1.6">Existe. Ingredientes baratos, qualquer pessoa consegue, e fica <b style="color:#ea580c">lisinho, firme e com calda brilhante</b> toda vez.</p>
@@ -292,216 +305,74 @@
     </div>
   </section>
 
-  <!-- Product mockup + what's inside -->
   <section class="section">
     <div class="wrap">
       <p class="section-tag">O Produto</p>
       <h2 class="section-title">O que está dentro do Método</h2>
       <div class="divider"></div>
 
-      <!-- Mockup placeholder -->
       <div class="mockup-box">
         <span class="emoji-big">🍮</span>
         <h3>Método Pudim Sem Fogo</h3>
         <p>Clara Aureliano</p>
-        <div class="placeholder-hint">📸 Coloque aqui a imagem da capa do seu PDF</div>
+        <div class="placeholder-hint">📸 Coloque aqui a capa do seu PDF</div>
       </div>
 
       <div class="card">
-        <div class="value-grid">
-          <div class="value-item">
-            <div class="value-icon">📚</div>
-            <div class="value-info">
-              <div class="value-title">+30 receitas testadas</div>
-              <div class="value-desc">Clássico, chocolate, maracujá, leite ninho e muito mais</div>
-            </div>
-            <div class="value-badge">30+</div>
-          </div>
-          <div class="value-item">
-            <div class="value-icon">🍯</div>
-            <div class="value-info">
-              <div class="value-title">11 caldas irresistíveis</div>
-              <div class="value-desc">Que fazem o cliente sempre pedir BIS</div>
-            </div>
-            <div class="value-badge">11</div>
-          </div>
-          <div class="value-item">
-            <div class="value-icon">🛒</div>
-            <div class="value-info">
-              <div class="value-title">Ingredientes do mercado</div>
-              <div class="value-desc">Baratos, fáceis de achar, que você provavelmente já tem</div>
-            </div>
-          </div>
-          <div class="value-item">
-            <div class="value-icon">🧁</div>
-            <div class="value-info">
-              <div class="value-title">Versão potinho para vender</div>
-              <div class="value-desc">Lucre mais com o mesmo custo</div>
-            </div>
-          </div>
-          <div class="value-item" style="background:#fffbf5;margin:-1px -1px -1px;padding:12px;border-radius:0 0 12px 12px">
-            <div class="value-icon" style="background:#fff3e0">⭐</div>
-            <div class="value-info">
-              <div class="value-title" style="color:#ea580c">BÔNUS — Guia de Vendas <span style="font-size:12px;font-weight:400;color:#78716c">(Premium)</span></div>
-              <div class="value-desc">Como precificar e vender todo dia — mesmo começando do zero</div>
-            </div>
-          </div>
-        </div>
+        <div class="value-item"><div class="value-icon">📚</div><div class="value-info"><div class="value-title">+30 receitas testadas</div><div class="value-desc">Clássico, chocolate, maracujá, paçoca e muito mais</div></div><div class="value-badge">30+</div></div>
+        <div class="value-item"><div class="value-icon">🍯</div><div class="value-info"><div class="value-title">11 caldas irresistíveis</div><div class="value-desc">Que fazem o cliente sempre pedir BIS</div></div><div class="value-badge">11</div></div>
+        <div class="value-item"><div class="value-icon">🛒</div><div class="value-info"><div class="value-title">Ingredientes do mercado</div><div class="value-desc">Baratos, fáceis de achar, que você já tem em casa</div></div></div>
+        <div class="value-item"><div class="value-icon">🧁</div><div class="value-info"><div class="value-title">Versão potinho para vender</div><div class="value-desc">Lucre mais com o mesmo custo</div></div></div>
       </div>
     </div>
   </section>
 
-  <!-- Plans -->
-  <section class="section alt" id="planos">
-    <div class="wrap">
-      <p class="section-tag">Escolha seu acesso</p>
-      <h2 class="section-title">Qual plano é pra você?</h2>
-      <div class="divider"></div>
-
-      <!-- Básico -->
-      <div class="plan-card" id="pcBasico" onclick="selecionarPlano('basico')">
-        <div class="plan-top">
-          <div class="plan-radio"><div class="plan-radio-dot"></div></div>
-          <div class="plan-name">🍮 Básico</div>
-          <div class="plan-prices">
-            <div class="plan-from">R$ 27,00</div>
-            <div class="plan-price">R$ 3,49</div>
-          </div>
-        </div>
-        <div class="plan-feats">
-          <div class="plan-feat"><span class="plan-feat-icon">✅</span> +30 receitas de pudim sem fogo</div>
-          <div class="plan-feat"><span class="plan-feat-icon">✅</span> 11 caldas irresistíveis</div>
-          <div class="plan-feat"><span class="plan-feat-icon">✅</span> Passo a passo completo</div>
-          <div class="plan-feat"><span class="plan-feat-icon">✅</span> Acesso vitalício no email</div>
-        </div>
+  <section class="section alt">
+    <div class="wrap" style="text-align:center">
+      <div class="price-box" style="max-width:320px">
+        <div class="from">De R$ 27,00</div>
+        <div class="price">R$ 3,49</div>
+        <div class="pmt">pagamento único • acesso vitalício</div>
       </div>
-
-      <!-- Premium -->
-      <div class="plan-card" id="pcPremium" onclick="selecionarPlano('premium')" style="padding-top:28px">
-        <div class="plan-badge-pop">⭐ MAIS COMPLETO</div>
-        <div class="plan-top">
-          <div class="plan-radio"><div class="plan-radio-dot"></div></div>
-          <div class="plan-name">👑 Premium</div>
-          <div class="plan-prices">
-            <div class="plan-from">R$ 47,00</div>
-            <div class="plan-price">R$ 9,90</div>
-          </div>
-        </div>
-        <div class="plan-feats">
-          <div class="plan-feat"><span class="plan-feat-icon">✅</span> Tudo do plano Básico</div>
-          <div class="plan-feat"><span class="plan-feat-icon">✅</span> <b>+20 receitas gourmet exclusivas</b></div>
-          <div class="plan-feat"><span class="plan-feat-icon">⭐</span> <b>Guia: como vender e precificar</b></div>
-          <div class="plan-feat"><span class="plan-feat-icon">🎁</span> Caldas especiais para revenda</div>
-          <div class="plan-feat"><span class="plan-feat-icon">📱</span> Suporte por WhatsApp</div>
-        </div>
+      <div style="margin-top:28px">
+        <button class="btn-cta" onclick="abrirPopup()" style="max-width:420px;margin:0 auto">🍮 Quero o Método Agora!</button>
+        <p class="btn-safe">🔒 Pagamento seguro · PIX instantâneo</p>
       </div>
-
-      <button class="btn-cta full" id="ctaPlanos" onclick="irParaCheckout()" style="margin-top:8px">
-        🔒 Garantir Meu Acesso Agora
-      </button>
-      <p class="btn-safe">PIX instantâneo · Acesso no email em minutos</p>
     </div>
   </section>
 
-  <!-- Testimonials -->
   <section class="section">
     <div class="wrap">
-      <p class="section-tag">Quem já comprou</p>
-      <h2 class="section-title">Elas amaram 💛</h2>
-      <div class="divider"></div>
-
-      <div class="testi">
-        <div class="testi-top">
-          <div class="testi-av placeholder">👩</div>
-          <div class="testi-meta">
-            <div class="testi-name">Mariana S.</div>
-            <div class="testi-stars">⭐⭐⭐⭐⭐</div>
-          </div>
-        </div>
-        <p class="testi-text">"Nunca tinha conseguido fazer pudim direitinho. Na primeira tentativa com esse método ficou perfeito — lisinho, sem furinhos e a calda ficou incrível! 😍"</p>
-      </div>
-
-      <div class="testi">
-        <div class="testi-top">
-          <div class="testi-av placeholder">👩</div>
-          <div class="testi-meta">
-            <div class="testi-name">Fernanda O.</div>
-            <div class="testi-stars">⭐⭐⭐⭐⭐</div>
-          </div>
-        </div>
-        <p class="testi-text">"Comecei vendendo potinhos na vizinhança e em duas semanas já fiz mais de R$380! Ingredientes baratos e qualquer pessoa consegue fazer 🍮💸"</p>
-      </div>
-
-      <div class="testi">
-        <div class="testi-top">
-          <div class="testi-av placeholder">👩</div>
-          <div class="testi-meta">
-            <div class="testi-name">Cláudia R.</div>
-            <div class="testi-stars">⭐⭐⭐⭐⭐</div>
-          </div>
-        </div>
-        <p class="testi-text">"As caldas são um diferencial absurdo! Todo mundo aqui em casa agora quer o de caramelo salgado. Obrigada Clara, valeu cada centavo!"</p>
-      </div>
-
-      <div style="text-align:center;margin-top:8px">
-        <p style="font-size:12px;color:#a8a29e">📸 Substitua pelos depoimentos reais das suas clientes</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Guarantee -->
-  <section class="section alt">
-    <div class="wrap">
       <div class="guarantee">
-        <div class="guarantee-icon">🛡️</div>
+        <span style="font-size:28px">🛡️</span>
         <p>Acesso vitalício garantido. Qualquer problema, é só responder o email que resolvo na hora.</p>
       </div>
     </div>
   </section>
 
-  <!-- FAQ -->
-  <section class="section">
+  <section class="section alt">
     <div class="wrap">
       <p class="section-tag">Dúvidas</p>
       <h2 class="section-title">Perguntas frequentes</h2>
       <div class="divider"></div>
       <div class="card">
-        <div class="faq-item">
-          <div class="faq-q">Como recebo o material?</div>
-          <div class="faq-a">No seu e-mail logo após o pagamento ser confirmado. Acesso instantâneo e vitalício.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">Serve para quem nunca fez pudim?</div>
-          <div class="faq-a">Sim! O passo a passo é bem detalhado e os ingredientes são simples. Qualquer pessoa consegue.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">Posso usar as receitas para vender?</div>
-          <div class="faq-a">Sim. Você pode usar para vender seus pudins — especialmente com o Guia de Vendas do plano Premium.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">Precisa de forno ou fogão?</div>
-          <div class="faq-a">Não! Esse é o grande diferencial do método — vai direto pra geladeira. Sem forno, sem banho-maria.</div>
-        </div>
+        <div class="faq-item"><div class="faq-q">Como recebo o material?</div><div class="faq-a">No seu e-mail logo após o pagamento ser confirmado. Acesso instantâneo e vitalício.</div></div>
+        <div class="faq-item"><div class="faq-q">Serve para quem nunca fez pudim?</div><div class="faq-a">Sim! O passo a passo é bem detalhado e os ingredientes são simples. Qualquer pessoa consegue.</div></div>
+        <div class="faq-item"><div class="faq-q">Posso usar as receitas para vender?</div><div class="faq-a">Sim. Você pode usar para vender seus pudins — especialmente com o Guia de Vendas do plano Premium.</div></div>
+        <div class="faq-item"><div class="faq-q">Precisa de forno ou fogão?</div><div class="faq-a">Não! Esse é o grande diferencial — vai direto pra geladeira. Sem forno, sem banho-maria.</div></div>
       </div>
     </div>
   </section>
 
-  <!-- Final CTA -->
-  <section class="section alt" style="padding-bottom:56px">
-    <div class="wrap" style="text-align:center">
-      <p style="font-size:36px;margin-bottom:12px">🍮</p>
-      <h2 class="section-title">Pronta para fazer o pudim perfeito?</h2>
-      <p style="font-size:15px;color:#78716c;margin-bottom:28px;line-height:1.6">Centenas de mulheres já transformaram essa receita em renda extra.<br>Agora é a sua vez.</p>
-      <button class="btn-cta" onclick="irParaPlanos()" style="max-width:420px;margin:0 auto">
-        🍮 Quero o Método Agora — R$ 3,49
-      </button>
-      <p class="btn-safe">🔒 Pagamento seguro · PIX instantâneo</p>
+  <section style="padding:20px 16px 32px;text-align:center">
+    <div class="wrap">
+      <button class="btn-cta" onclick="abrirPopup()" style="max-width:420px;margin:0 auto">🍮 Quero o Método Agora — R$ 3,49</button>
+      <p class="btn-safe">🔒 Pagamento 100% seguro · PIX via Mercado Pago</p>
     </div>
   </section>
 
-  <!-- WhatsApp -->
-  <section style="padding:20px 16px 28px;text-align:center;background:white;border-top:1px solid #f5f5f4">
-    <a href="https://wa.me/5587974009597?text=Ol%C3%A1%2C%20tenho%20d%C3%BAvidas%20sobre%20o%20Pudim%20Sem%20Fogo!" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#25d366;color:white;font-size:15px;font-weight:700;padding:13px 28px;border-radius:999px;text-decoration:none;box-shadow:0 4px 16px rgba(37,211,102,.3)">
+  <section style="padding:16px 16px 28px;text-align:center;background:white;border-top:1px solid #f5f5f4">
+    <a href="https://wa.me/5587974009597?text=Ol%C3%A1%2C+tenho+d%C3%BAvidas+sobre+o+Pudim+Sem+Fogo!" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#25d366;color:white;font-size:15px;font-weight:700;padding:13px 28px;border-radius:999px;text-decoration:none;box-shadow:0 4px 16px rgba(37,211,102,.3)">
       <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 6.988 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
       Tirar dúvidas no WhatsApp
     </a>
@@ -512,191 +383,148 @@
     <p style="font-style:italic;color:#a8a29e">— Hebreus 13:8</p>
     <p style="margin-top:12px">© 2025 Clara Aureliano · Todos os direitos reservados.</p>
   </footer>
+</div>
 
-</div><!-- /salesPage -->
-
-
-<!-- ═══════════ CHECKOUT ═══════════ -->
-<div id="checkoutPage" style="display:none;min-height:100vh">
-
-  <!-- Sticky header -->
-  <div style="position:sticky;top:0;z-index:60;background:linear-gradient(135deg,#ea580c,#c2410c);padding:12px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 12px rgba(234,88,12,.3)" id="ckHeader">
+<!-- ═══ CHECKOUT ═══ -->
+<div id="checkoutPage">
+  <div class="ck-header">
     <button onclick="voltarVendas()" style="background:none;border:none;cursor:pointer;padding:4px;display:flex;align-items:center">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
     </button>
     <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:20px">🍮</div>
-    <div>
-      <div style="color:white;font-size:15px;font-weight:700">Finalizar Pedido</div>
-      <div style="color:rgba(255,255,255,.8);font-size:12px" id="ckHeaderSub">Pudim Sem Fogo — Básico · R$ 3,49</div>
-    </div>
-    <svg style="margin-left:auto" width="18" height="18" viewBox="0 0 24 24" fill="rgba(255,255,255,.6)"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+    <div><div style="color:white;font-size:15px;font-weight:700">Finalizar Pedido</div><div style="color:rgba(255,255,255,.8);font-size:12px" id="ckSub">Pudim Sem Fogo · R$ 3,49</div></div>
+    <svg style="margin-left:auto;flex-shrink:0" width="18" height="18" viewBox="0 0 24 24" fill="rgba(255,255,255,.6)"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
   </div>
 
   <div class="wrap" style="padding-top:20px;padding-bottom:40px">
 
-    <!-- Tela 1: Form -->
     <div class="screen active" id="screen-email">
-
-      <!-- Resumo plano -->
-      <div class="card border-orange" style="margin-bottom:14px">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div style="display:flex;align-items:center;gap:12px">
-            <div style="font-size:32px">🍮</div>
-            <div>
-              <div style="font-size:15px;font-weight:700;color:#1c1917" id="ckResumoNome">Pudim Sem Fogo — Básico</div>
-              <div style="font-size:18px;font-weight:800;color:#ea580c;margin-top:2px" id="ckResumoPreco">R$ 3,49</div>
-            </div>
-          </div>
-          <button onclick="voltarVendas()" style="background:none;border:1.5px solid #e7e5e4;border-radius:10px;padding:6px 12px;font-size:12px;color:#78716c;cursor:pointer;font-weight:600">Trocar</button>
+      <div style="background:white;border-radius:20px;padding:16px;box-shadow:0 2px 16px rgba(0,0,0,.06);margin-bottom:14px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:32px">🍮</div>
+        <div style="flex:1">
+          <div style="font-size:15px;font-weight:700;color:#1c1917" id="ckNome">Pudim Sem Fogo — Básico</div>
+          <div style="font-size:18px;font-weight:800;color:#ea580c;margin-top:2px" id="ckPreco">R$ 3,49</div>
         </div>
+        <button onclick="voltarVendas()" style="background:none;border:1.5px solid #e7e5e4;border-radius:10px;padding:6px 12px;font-size:12px;color:#78716c;cursor:pointer;font-weight:600">Trocar</button>
       </div>
 
-      <!-- Form -->
       <div class="form-card">
-        <div class="form-field">
-          <label class="label">Seu nome</label>
-          <input type="text" id="nomeInput" placeholder="Como posso te chamar?" autocomplete="given-name">
-        </div>
-        <div class="form-field">
-          <label class="label">Email para receber o material</label>
-          <input type="email" id="emailInput" placeholder="seuemail@gmail.com" inputmode="email" autocorrect="off" autocapitalize="none">
-        </div>
+        <div class="ffield"><label class="flabel">Seu nome</label><input type="text" id="nomeInput" placeholder="Como posso te chamar?" class="finput" autocomplete="given-name"></div>
+        <div class="ffield"><label class="flabel">Email para receber o material</label><input type="email" id="emailInput" placeholder="seuemail@gmail.com" class="finput" inputmode="email" autocorrect="off" autocapitalize="none"></div>
       </div>
 
-      <!-- Order Bump -->
       <div class="bump-wrap">
-        <div class="bump-header">🎁 Oferta especial — só aparece aqui!</div>
+        <div class="bump-hdr">🎁 Oferta especial — só aparece aqui!</div>
         <div class="bump-body" id="bumpBody" onclick="toggleBump()">
-          <div class="bump-cb" id="bumpCb">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" id="bumpIcon" style="display:none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
+          <div class="bump-cb" id="bumpCb"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" id="bumpIcon" style="display:none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="bump-img">🍰</div>
           <div class="bump-info">
             <div class="bump-name">Sobremesas Sem Fogo — Coleção Completa</div>
-            <div class="bump-desc">+25 sobremesas geladas, mousses, pavês e muito mais. Perfeito para diversificar e vender mais!</div>
-            <div class="bump-prices">
-              <span class="bump-from">R$ 19,90</span>
-              <span class="bump-price">+ R$ 4,90</span>
-            </div>
+            <div class="bump-desc">+25 sobremesas geladas, mousses, pavês e muito mais!</div>
+            <div class="bump-prices"><span class="bump-from">R$ 19,90</span><span class="bump-price">+ R$ 4,90</span></div>
           </div>
         </div>
       </div>
 
-      <!-- Subtotal -->
       <div class="sub-card">
-        <div class="sub-row">
-          <span id="subNome">Pudim Sem Fogo — Básico</span>
-          <span id="subPreco">R$ 3,49</span>
-        </div>
-        <div id="subBumpLine" style="display:none">
-          <div class="sub-row">
-            <span>Sobremesas Sem Fogo</span>
-            <span style="color:#2563eb;font-weight:600">+ R$ 4,90</span>
-          </div>
-        </div>
-        <div class="sub-total">
-          <span style="font-size:16px;font-weight:700;color:#1c1917">Total</span>
-          <span style="font-size:20px;font-weight:800;color:#ea580c" id="subTotal">R$ 3,49</span>
-        </div>
+        <div class="sub-row"><span id="subNome">Pudim Sem Fogo — Básico</span><span id="subPreco">R$ 3,49</span></div>
+        <div id="subBumpLine" style="display:none"><div class="sub-row"><span>Sobremesas Sem Fogo</span><span style="color:#2563eb;font-weight:600">+ R$ 4,90</span></div></div>
+        <div class="sub-total"><span style="font-size:16px;font-weight:700;color:#1c1917">Total</span><span style="font-size:20px;font-weight:800;color:#ea580c" id="subTotal">R$ 3,49</span></div>
       </div>
 
-      <button class="btn-cta full" id="gerarPixBtn" onclick="gerarPix()">
-        🔒 Gerar PIX — <span id="btnTotal">R$ 3,49</span>
-      </button>
-      <p class="btn-safe" style="margin-top:10px">Mercado Pago · Pagamento 100% seguro</p>
+      <button class="btn-pix" id="gerarPixBtn" onclick="gerarPix()">🔒 Gerar PIX — <span id="btnTotal">R$ 3,49</span></button>
+      <p class="btn-safe" style="margin-top:10px">Mercado Pago · 100% seguro</p>
     </div>
 
-    <!-- Tela 2: PIX -->
     <div class="screen" id="screen-pix">
-      <div class="card" style="margin-top:4px">
+      <div style="background:white;border-radius:20px;padding:22px;box-shadow:0 2px 16px rgba(0,0,0,.06);margin-bottom:14px">
         <div style="font-size:11px;font-weight:700;color:#78716c;text-transform:uppercase;letter-spacing:.6px;margin-bottom:18px">Pagamento via PIX</div>
         <div class="qr-wrap">
           <div class="qr-frame"><img id="qrImg" src="" alt="QR PIX" width="200" height="200"></div>
-          <div class="qr-status">
-            <div class="spinner" id="qrSpinner"></div>
-            <span id="qrStatusTxt">Aguardando pagamento...</span>
-          </div>
-          <div class="copy-row">
-            <input class="copy-inp" id="pixCode" readonly>
-            <button class="btn-copy" id="btnCopy" onclick="copiarPix()">Copiar</button>
-          </div>
+          <div class="qr-status"><div class="spinner" id="qrSpinner"></div><span id="qrStatusTxt">Aguardando pagamento...</span></div>
+          <div class="copy-row"><input class="copy-inp" id="pixCode" readonly><button class="btn-copy" id="btnCopy" onclick="copiarPix()">Copiar</button></div>
           <p class="expiry" id="expiryTxt"></p>
         </div>
       </div>
-      <div class="pix-tip">
-        <span>📱</span>
-        <span>Abra o app do banco → PIX → <b>QR Code</b> ou <b>Copia e Cola</b> → cole o código acima.</span>
-      </div>
+      <div class="pix-tip"><span>📱</span><span>Abra o app do banco → PIX → <b>QR Code</b> ou <b>Copia e Cola</b>.</span></div>
     </div>
 
-    <!-- Tela 3: Sucesso -->
     <div class="screen" id="screen-success">
-      <div class="card" style="margin-top:4px">
+      <div style="background:white;border-radius:20px;padding:22px;box-shadow:0 2px 16px rgba(0,0,0,.06)">
         <div class="success-wrap">
           <div class="success-ring">🍮</div>
-          <div class="success-title">Pagamento confirmado! 🎉</div>
-          <div class="success-sub">Seus materiais foram enviados para<br><span class="success-email" id="successEmail"></span></div>
-          <div class="access-row">
-            ♾️ <b>Acesso vitalício</b> — guarde o email, os links não expiram nunca!
-          </div>
+          <div style="font-size:22px;font-weight:800;color:#1c1917;margin-bottom:8px">Pagamento confirmado! 🎉</div>
+          <div style="color:#78716c;font-size:14px;line-height:1.7">Seus materiais foram enviados para<br><span style="color:#ea580c;font-weight:700" id="successEmail"></span></div>
+          <div style="background:#fff3e0;border-radius:14px;padding:14px 16px;margin-top:16px;font-size:13px;color:#92400e;line-height:1.6;border:1px solid #fed7aa">♾️ <b>Acesso vitalício</b> — guarde o email, os links não expiram nunca!</div>
         </div>
       </div>
       <p style="text-align:center;color:#a8a29e;font-size:13px;margin-top:16px;line-height:1.8">Com carinho, <b style="color:#ea580c">Clara Aureliano</b> 💛<br>Dúvidas? Responda o email recebido.</p>
     </div>
 
-  </div><!-- /wrap -->
-</div><!-- /checkoutPage -->
+  </div>
+</div>
 
 <script>
 (function(){
-  var plano = 'basico';
-  var bumpOn = false;
-  var paymentId = null;
-  var pollInt = null;
-  var userEmail = '';
-
+  var plano = 'basico', bumpOn = false, paymentId = null, pollInt = null, userEmail = '';
   var PLANOS = {
-    basico:  { nome:'Pudim Sem Fogo — Básico',   preco:3.49,  api:'pudim-basic'   },
-    premium: { nome:'Pudim Sem Fogo — Premium',  preco:9.90,  api:'pudim-premium' }
+    basico:  { nome:'Pudim Sem Fogo — Básico',  preco:3.49, api:'pudim-basic'   },
+    premium: { nome:'Pudim Sem Fogo — Premium', preco:9.90, api:'pudim-premium' }
   };
   var BUMP = 4.90;
 
-  // ── Timer ────────────────────────────────────────────────────────────────────
+  // ── Urgency bar ──────────────────────────────────────────────────────────────
   (function(){
-    var key = 'pudim_urg_end', bar = document.getElementById('urgBar'), cd = document.getElementById('urgCD');
-    var end = +localStorage.getItem(key) || 0;
-    if(!end || end < Date.now()){ end = Date.now() + 12*60*1000; localStorage.setItem(key, end); }
-    bar.style.display = 'block';
-    function tick(){
-      var d = Math.max(0, end - Date.now());
-      var m = Math.floor(d/60000), s = Math.floor((d%60000)/1000);
-      cd.textContent = m+':'+(s<10?'0':'')+s;
-      if(!d) clearInterval(t);
-    }
-    var t = setInterval(tick, 1000); tick();
+    var key='pudim_urg', bar=document.getElementById('urgBar'), cd=document.getElementById('urgCD');
+    var end=+localStorage.getItem(key)||0;
+    if(!end||end<Date.now()){end=Date.now()+12*60*1000;localStorage.setItem(key,end);}
+    bar.style.display='block';
+    function tick(){var d=Math.max(0,end-Date.now()),m=Math.floor(d/60000),s=Math.floor((d%60000)/1000);cd.textContent=m+':'+(s<10?'0':'')+s;if(!d)clearInterval(t);}
+    var t=setInterval(tick,1000);tick();
   })();
 
-  // ── Plan selection ────────────────────────────────────────────────────────────
-  window.selecionarPlano = function(p){
-    plano = p;
-    document.getElementById('pcBasico').classList.toggle('selected', p==='basico');
-    document.getElementById('pcPremium').classList.toggle('selected', p==='premium');
-    var label = p==='premium' ? 'Premium — R$ 9,90' : 'Básico — R$ 3,49';
-    document.getElementById('ctaPlanos').textContent = '🔒 Garantir Meu Acesso — ' + (p==='premium' ? 'R$ 9,90' : 'R$ 3,49');
-  };
-  selecionarPlano('basico');
+  // ── Popup timer ──────────────────────────────────────────────────────────────
+  var popTimer = null;
+  function iniciarPopupTimer(){
+    var cd = document.getElementById('popupCD'), secs = 7*60+30;
+    if(popTimer) clearInterval(popTimer);
+    popTimer = setInterval(function(){
+      secs = Math.max(0, secs-1);
+      var m = Math.floor(secs/60), s = secs%60;
+      cd.textContent = (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+      if(!secs){ clearInterval(popTimer); }
+    }, 1000);
+  }
 
-  window.irParaPlanos = function(){
-    document.getElementById('planos').scrollIntoView({behavior:'smooth'});
+  // ── Popup ────────────────────────────────────────────────────────────────────
+  window.abrirPopup = function(){
+    document.getElementById('upgradeOverlay').classList.add('show');
+    iniciarPopupTimer();
+    if(typeof fbq!=='undefined') fbq('track','ViewContent',{content_name:'Pudim Premium',value:9.90,currency:'BRL'});
+  };
+  window.fecharPopup = function(){ document.getElementById('upgradeOverlay').classList.remove('show'); clearInterval(popTimer); };
+
+  window.escolherPremium = function(){
+    plano = 'premium';
+    document.getElementById('upgradeOverlay').classList.remove('show');
+    clearInterval(popTimer);
+    if(typeof fbq!=='undefined') fbq('track','InitiateCheckout',{value:9.90,currency:'BRL'});
+    irParaCheckout();
+  };
+  window.escolherBasico = function(){
+    plano = 'basico';
+    document.getElementById('upgradeOverlay').classList.remove('show');
+    clearInterval(popTimer);
+    if(typeof fbq!=='undefined') fbq('track','InitiateCheckout',{value:3.49,currency:'BRL'});
+    irParaCheckout();
   };
 
-  window.irParaCheckout = function(){
+  function irParaCheckout(){
     atualizarResumo();
     document.getElementById('salesPage').style.display = 'none';
     document.getElementById('checkoutPage').style.display = 'block';
     window.scrollTo({top:0,behavior:'instant'});
-  };
-
+  }
   window.voltarVendas = function(){
     document.getElementById('checkoutPage').style.display = 'none';
     document.getElementById('salesPage').style.display = 'block';
@@ -704,109 +532,86 @@
   };
 
   function atualizarResumo(){
-    var p = PLANOS[plano], total = p.preco + (bumpOn ? BUMP : 0);
-    var ts = 'R$ '+total.toFixed(2).replace('.',',');
-    var ps = 'R$ '+p.preco.toFixed(2).replace('.',',');
-    document.getElementById('ckHeaderSub').textContent  = p.nome+' · '+ps;
-    document.getElementById('ckResumoNome').textContent = p.nome;
-    document.getElementById('ckResumoPreco').textContent= ps;
-    document.getElementById('subNome').textContent      = p.nome;
-    document.getElementById('subPreco').textContent     = ps;
-    document.getElementById('subTotal').textContent     = ts;
-    document.getElementById('btnTotal').textContent     = ts;
-    document.getElementById('subBumpLine').style.display = bumpOn ? 'block' : 'none';
+    var p=PLANOS[plano], total=p.preco+(bumpOn?BUMP:0);
+    var ts='R$ '+total.toFixed(2).replace('.',','), ps='R$ '+p.preco.toFixed(2).replace('.',',');
+    document.getElementById('ckSub').textContent   = p.nome+' · '+ps;
+    document.getElementById('ckNome').textContent  = p.nome;
+    document.getElementById('ckPreco').textContent = ps;
+    document.getElementById('subNome').textContent = p.nome;
+    document.getElementById('subPreco').textContent= ps;
+    document.getElementById('subTotal').textContent= ts;
+    document.getElementById('btnTotal').textContent= ts;
+    document.getElementById('subBumpLine').style.display = bumpOn?'block':'none';
   }
 
-  // ── Order Bump ────────────────────────────────────────────────────────────────
   window.toggleBump = function(){
-    bumpOn = !bumpOn;
-    var body = document.getElementById('bumpBody'), cb = document.getElementById('bumpCb'), icon = document.getElementById('bumpIcon');
-    body.classList.toggle('selected', bumpOn);
-    cb.style.background = bumpOn ? '#2563eb' : 'white';
-    cb.style.borderColor = bumpOn ? '#2563eb' : '#d6d3d1';
-    icon.style.display = bumpOn ? 'block' : 'none';
+    bumpOn=!bumpOn;
+    var body=document.getElementById('bumpBody'),cb=document.getElementById('bumpCb'),icon=document.getElementById('bumpIcon');
+    body.classList.toggle('on',bumpOn);
+    cb.style.background=bumpOn?'#2563eb':'white'; cb.style.borderColor=bumpOn?'#2563eb':'#d6d3d1';
+    icon.style.display=bumpOn?'block':'none';
     atualizarResumo();
   };
 
-  // ── Gerar PIX ─────────────────────────────────────────────────────────────────
   window.gerarPix = async function(){
-    var nome  = document.getElementById('nomeInput').value.trim();
-    var email = document.getElementById('emailInput').value.trim();
-    ['nomeInput','emailInput'].forEach(function(id){ document.getElementById(id).classList.remove('err'); });
-
-    if(!nome){ document.getElementById('nomeInput').classList.add('err'); document.getElementById('nomeInput').focus(); return; }
-    if(!email||!email.includes('@')){ document.getElementById('emailInput').classList.add('err'); document.getElementById('emailInput').focus(); return; }
-
-    userEmail = email;
-    var p = PLANOS[plano], total = p.preco + (bumpOn ? BUMP : 0);
-
-    document.getElementById('overlayText').textContent = 'Gerando seu PIX...';
+    var nome=document.getElementById('nomeInput').value.trim(), email=document.getElementById('emailInput').value.trim();
+    ['nomeInput','emailInput'].forEach(function(id){document.getElementById(id).classList.remove('err');});
+    if(!nome){document.getElementById('nomeInput').classList.add('err');document.getElementById('nomeInput').focus();return;}
+    if(!email||!email.includes('@')){document.getElementById('emailInput').classList.add('err');document.getElementById('emailInput').focus();return;}
+    userEmail=email;
+    var p=PLANOS[plano], total=p.preco+(bumpOn?BUMP:0);
+    document.getElementById('overlayText').textContent='Gerando seu PIX...';
     document.getElementById('overlay').classList.add('show');
-    document.getElementById('gerarPixBtn').disabled = true;
-
-    try {
-      var res = await fetch('/api/checkout',{
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ produto:p.api, nome:nome, email:email, valor:total,
-          metadata:{ buyer_email:email, buyer_nome:nome, funnel_id:'pudim-sem-fogo',
-            bumps: JSON.stringify(bumpOn?[{name:'Sobremesas Sem Fogo',deliveryUrl:''}]:[]) }
-        })
-      });
-      var data = await res.json();
+    document.getElementById('gerarPixBtn').disabled=true;
+    try{
+      var res=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({produto:p.api,nome:nome,email:email,valor:total,
+          metadata:{buyer_email:email,buyer_nome:nome,funnel_id:'pudim-sem-fogo',
+            bumps:JSON.stringify(bumpOn?[{name:'Sobremesas Sem Fogo',deliveryUrl:''}]:[])}})});
+      var data=await res.json();
       if(!data.payment_id) throw new Error(data.error||'Erro ao gerar PIX');
-
-      paymentId = data.payment_id;
-      document.getElementById('qrImg').src = 'data:image/png;base64,'+data.qr_code_base64;
-      document.getElementById('pixCode').value = data.qr_code;
-      var exp = new Date(Date.now()+30*60000);
-      document.getElementById('expiryTxt').textContent = 'PIX válido até '+exp.getHours()+':'+(exp.getMinutes()<10?'0':'')+exp.getMinutes();
-
+      paymentId=data.payment_id;
+      document.getElementById('qrImg').src='data:image/png;base64,'+data.qr_code_base64;
+      document.getElementById('pixCode').value=data.qr_code;
+      var exp=new Date(Date.now()+30*60000);
+      document.getElementById('expiryTxt').textContent='PIX válido até '+exp.getHours()+':'+(exp.getMinutes()<10?'0':'')+exp.getMinutes();
       mostrarTela('screen-pix');
       document.getElementById('overlay').classList.remove('show');
-      if(typeof fbq!=='undefined') fbq('track','InitiateCheckout',{value:total,currency:'BRL'});
       iniciarPolling();
-
-    } catch(e){
+    }catch(e){
       document.getElementById('overlay').classList.remove('show');
-      document.getElementById('gerarPixBtn').disabled = false;
+      document.getElementById('gerarPixBtn').disabled=false;
       alert('Erro: '+e.message);
     }
   };
 
   function iniciarPolling(){
-    pollInt = setInterval(async function(){
-      try {
-        var r = await fetch('/api/checkout/status/'+paymentId);
-        var d = await r.json();
-        if(d.status==='approved'){ clearInterval(pollInt); pagoComSucesso(); }
-      } catch(e){}
-    }, 3000);
+    pollInt=setInterval(async function(){
+      try{var r=await fetch('/api/checkout/status/'+paymentId),d=await r.json();if(d.status==='approved'){clearInterval(pollInt);pagoComSucesso();}}catch(e){}
+    },3000);
   }
 
   function pagoComSucesso(){
     document.getElementById('qrSpinner').style.display='none';
     document.getElementById('qrStatusTxt').textContent='Pago! ✅';
-    document.getElementById('successEmail').textContent = userEmail;
-    var p = PLANOS[plano], total = p.preco + (bumpOn ? BUMP : 0);
-    fetch('https://phyznlckywngdgphlyho.supabase.co/functions/v1/gg-webhook',{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ event:'pagamento_confirmado', email:userEmail,
-        valor:String(total.toFixed(2).replace('.',',')),
-        produto:'Pudim Sem Fogo '+(plano==='premium'?'Premium':'Básico'),
-        payment_id:paymentId, timestamp:new Date().toISOString() })
+    document.getElementById('successEmail').textContent=userEmail;
+    var p=PLANOS[plano],total=p.preco+(bumpOn?BUMP:0);
+    fetch('https://phyznlckywngdgphlyho.supabase.co/functions/v1/gg-webhook',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({event:'pagamento_confirmado',email:userEmail,valor:String(total.toFixed(2).replace('.',',')),
+        produto:'Pudim Sem Fogo '+(plano==='premium'?'Premium':'Básico'),payment_id:paymentId,timestamp:new Date().toISOString()})
     }).catch(function(){});
     if(typeof fbq!=='undefined') fbq('track','Purchase',{value:total,currency:'BRL'});
-    setTimeout(function(){ mostrarTela('screen-success'); }, 800);
+    setTimeout(function(){mostrarTela('screen-success');},800);
   }
 
-  window.copiarPix = function(){
-    var inp = document.getElementById('pixCode'); inp.select(); document.execCommand('copy');
-    var btn = document.getElementById('btnCopy'); btn.textContent='Copiado!'; btn.classList.add('copied');
-    setTimeout(function(){ btn.textContent='Copiar'; btn.classList.remove('copied'); }, 2000);
+  window.copiarPix=function(){
+    var inp=document.getElementById('pixCode');inp.select();document.execCommand('copy');
+    var btn=document.getElementById('btnCopy');btn.textContent='Copiado!';btn.classList.add('copied');
+    setTimeout(function(){btn.textContent='Copiar';btn.classList.remove('copied');},2000);
   };
 
   function mostrarTela(id){
-    document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+    document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
     document.getElementById(id).classList.add('active');
     window.scrollTo({top:0,behavior:'smooth'});
   }
