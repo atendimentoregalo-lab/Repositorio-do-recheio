@@ -410,22 +410,14 @@
         <div class="ffield"><label class="flabel">E-mail <span style="color:#ea580c;font-weight:700">📧 O material chega aqui!</span></label><input type="email" id="emailInput" placeholder="seuemail@gmail.com" class="finput" inputmode="email" autocorrect="off" autocapitalize="none"></div>
       </div>
 
-      <div class="bump-wrap">
-        <div class="bump-hdr">🎁 Oferta especial — só aparece aqui!</div>
-        <div id="bumpBody" class="bump-body" onclick="toggleBump()">
-          <div class="bump-cb" id="bumpCb"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" id="bumpIcon" style="display:none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <div class="bump-img" id="bumpEmoji">🍰</div>
-          <div class="bump-info">
-            <div class="bump-name" id="bumpNome">—</div>
-            <div class="bump-desc" id="bumpDesc">—</div>
-            <div class="bump-prices"><span class="bump-from" id="bumpFrom">—</span><span class="bump-price" id="bumpPreco">—</span></div>
-          </div>
-        </div>
+      <div class="bump-wrap" id="bumpWrap" style="display:none">
+        <div class="bump-hdr">🎁 Ofertas especiais — só aparecem aqui!</div>
+        <div id="bumpsContainer"></div>
       </div>
 
       <div class="sub-card">
         <div class="sub-row"><span id="subNome">Pudim Sem Fogo — Básico</span><span id="subPreco">R$ 3,49</span></div>
-        <div id="subBumpLine" style="display:none"><div class="sub-row"><span id="subBumpNome">—</span><span style="color:#2563eb;font-weight:600" id="subBumpPreco">—</span></div></div>
+        <div id="subBumpsLines"></div>
         <div class="sub-total"><span style="font-size:16px;font-weight:700;color:#1c1917">Total</span><span style="font-size:20px;font-weight:800;color:#ea580c" id="subTotal">R$ 3,49</span></div>
       </div>
 
@@ -463,18 +455,16 @@
 
 <script>
 (function(){
-  var plano = 'basico', bumpOn = false, paymentId = null, pollInt = null, userEmail = '';
+  var plano = 'basico', bumpsSelected = {}, paymentId = null, pollInt = null, userEmail = '';
   var PLANOS = {
     basico:  { nome:'Pudim Sem Fogo — Básico',  preco:3.49, api:'pudim-basic',  img:'' },
     premium: { nome:'Pudim Sem Fogo — Premium', preco:9.90, api:'pudim-premium', img:'' }
   };
   var CONFIG = { bumps: [] };
-  var BUMP = 0;
 
   // ── Carrega config do servidor (bumps, preços, imagens) ──────────────────────
   var configPromise = fetch('/api/checkout/config').then(function(r){ return r.json(); }).then(function(d){
     CONFIG = d;
-    BUMP = d.bumps[0] ? d.bumps[0].precoAdicional : 0;
     var bas = d.produtos['pudim-basic'];
     var pre = d.produtos['pudim-premium'];
     if(bas){ PLANOS.basico.preco = bas.valor; PLANOS.basico.nome = bas.nome; PLANOS.basico.img = bas.imageUrl||''; }
@@ -491,22 +481,31 @@
     var t=setInterval(tick,1000);tick();
   })();
 
-  // ── Inicializar bump via CONFIG (chamado ao entrar no checkout) ──────────────
+  // ── Inicializar bumps dinamicamente (N bumps do CONFIG) ──────────────────────
   function inicializarBump(){
-    var bumpWrap = document.getElementById('bumpBody') && document.getElementById('bumpBody').closest('.bump-wrap');
-    if(!CONFIG.bumps.length){ if(bumpWrap) bumpWrap.style.display='none'; return; }
-    if(bumpWrap) bumpWrap.style.display='';
-    var b = CONFIG.bumps[0];
-    BUMP = b.precoAdicional;
-    var bumpImgEl = document.getElementById('bumpEmoji');
-    if(b.imageUrl){ bumpImgEl.innerHTML='<img src="'+b.imageUrl+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:10px">'; }
-    else { bumpImgEl.textContent = b.emoji||'🎁'; }
-    document.getElementById('bumpNome').textContent  = b.nome;
-    document.getElementById('bumpDesc').textContent  = b.desc;
-    document.getElementById('bumpFrom').textContent  = b.precoOriginal;
-    document.getElementById('bumpPreco').textContent = '+ R$ '+b.precoAdicional.toFixed(2).replace('.',',');
-    document.getElementById('subBumpNome').textContent  = b.nome.split('—')[0].trim();
-    document.getElementById('subBumpPreco').textContent = '+ R$ '+b.precoAdicional.toFixed(2).replace('.',',');
+    bumpsSelected = {};
+    var wrap = document.getElementById('bumpWrap');
+    var container = document.getElementById('bumpsContainer');
+    if(!CONFIG.bumps.length){ wrap.style.display='none'; return; }
+    wrap.style.display='';
+    container.innerHTML = CONFIG.bumps.map(function(b, i){
+      var imgHtml = b.imageUrl
+        ? '<img src="'+b.imageUrl+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:10px">'
+        : (b.emoji||'🎁');
+      return '<div class="bump-body" id="bump-'+i+'" onclick="toggleBump(\''+b.id+'\')">'
+        + '<div class="bump-cb" id="bumpCb-'+i+'"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" id="bumpIcon-'+i+'" style="display:none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'
+        + '<div class="bump-img">'+imgHtml+'</div>'
+        + '<div class="bump-info">'
+        +   '<div class="bump-name">'+b.nome+'</div>'
+        +   '<div class="bump-desc">'+b.desc+'</div>'
+        +   '<div class="bump-prices"><span class="bump-from">'+b.precoOriginal+'</span><span class="bump-price">+ R$ '+b.precoAdicional.toFixed(2).replace('.',',')+'</span></div>'
+        + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  function calcBumpTotal(){
+    return CONFIG.bumps.reduce(function(sum, b){ return sum + (bumpsSelected[b.id] ? b.precoAdicional : 0); }, 0);
   }
 
   // ── Popup timer ──────────────────────────────────────────────────────────────
@@ -566,7 +565,7 @@
   };
 
   function atualizarResumo(){
-    var p=PLANOS[plano], total=p.preco+(bumpOn?BUMP:0);
+    var p=PLANOS[plano], bumpTotal=calcBumpTotal(), total=p.preco+bumpTotal;
     var ts='R$ '+total.toFixed(2).replace('.',','), ps='R$ '+p.preco.toFixed(2).replace('.',',');
     document.getElementById('ckSub').textContent   = p.nome+' · '+ps;
     document.getElementById('ckNome').textContent  = p.nome;
@@ -575,15 +574,22 @@
     document.getElementById('subPreco').textContent= ps;
     document.getElementById('subTotal').textContent= ts;
     document.getElementById('btnTotal').textContent= ts;
-    document.getElementById('subBumpLine').style.display = bumpOn?'block':'none';
+    var lines = CONFIG.bumps.filter(function(b){ return bumpsSelected[b.id]; })
+      .map(function(b){ return '<div class="sub-row"><span>'+b.nome.split('—')[0].trim()+'</span><span style="color:#2563eb;font-weight:600">+ R$ '+b.precoAdicional.toFixed(2).replace('.',',')+'</span></div>'; }).join('');
+    document.getElementById('subBumpsLines').innerHTML = lines;
   }
 
-  window.toggleBump = function(){
-    bumpOn=!bumpOn;
-    var body=document.getElementById('bumpBody'),cb=document.getElementById('bumpCb'),icon=document.getElementById('bumpIcon');
-    body.classList.toggle('on',bumpOn);
-    cb.style.background=bumpOn?'#2563eb':'white'; cb.style.borderColor=bumpOn?'#2563eb':'#d6d3d1';
-    icon.style.display=bumpOn?'block':'none';
+  window.toggleBump = function(id){
+    bumpsSelected[id] = !bumpsSelected[id];
+    var idx = CONFIG.bumps.findIndex(function(b){ return b.id===id; });
+    var body = document.getElementById('bump-'+idx);
+    var cb   = document.getElementById('bumpCb-'+idx);
+    var icon = document.getElementById('bumpIcon-'+idx);
+    if(!body) return;
+    body.classList.toggle('on', !!bumpsSelected[id]);
+    cb.style.background  = bumpsSelected[id]?'#2563eb':'white';
+    cb.style.borderColor = bumpsSelected[id]?'#2563eb':'#d6d3d1';
+    icon.style.display   = bumpsSelected[id]?'block':'none';
     atualizarResumo();
   };
 
@@ -594,15 +600,16 @@
     if(!nome){document.getElementById('nomeInput').classList.add('err');document.getElementById('nomeInput').focus();return;}
     if(!email||!email.includes('@')){document.getElementById('emailInput').classList.add('err');document.getElementById('emailInput').focus();return;}
     userEmail=email;
-    var p=PLANOS[plano], total=p.preco+(bumpOn?BUMP:0);
+    var p=PLANOS[plano], total=p.preco+calcBumpTotal();
     document.getElementById('overlayText').textContent='Gerando seu PIX...';
     document.getElementById('overlay').classList.add('show');
     document.getElementById('gerarPixBtn').disabled=true;
+    var selectedBumpIds=CONFIG.bumps.filter(function(b){return bumpsSelected[b.id];}).map(function(b){return b.id;});
     try{
       var res=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},
         body:JSON.stringify({produto:p.api,nome:nome,email:email,valor:total,
           metadata:{buyer_email:email,buyer_nome:nome,funnel_id:'pudim-sem-fogo',
-            bumps:JSON.stringify(bumpOn?[{name:'Sobremesas Sem Fogo',deliveryUrl:''}]:[])}})});
+            bumps:JSON.stringify(selectedBumpIds)}})});
       var data=await res.json();
       if(!data.payment_id) throw new Error(data.error||'Erro ao gerar PIX');
       paymentId=data.payment_id;
@@ -622,7 +629,7 @@
 
   function iniciarPolling(){
     var p=PLANOS[plano];
-    var bumpsIds=bumpOn&&CONFIG.bumps.length?CONFIG.bumps.map(function(b){return b.id}).join(','):'';
+    var bumpsIds=CONFIG.bumps.filter(function(b){return bumpsSelected[b.id];}).map(function(b){return b.id;}).join(',');
     var url='/api/checkout/status/'+paymentId+'?produto='+encodeURIComponent(p.api)+(bumpsIds?'&bumps='+encodeURIComponent(bumpsIds):'');
     pollInt=setInterval(async function(){
       try{var r=await fetch(url),d=await r.json();if(d.status==='approved'){clearInterval(pollInt);pagoComSucesso();}}catch(e){}
@@ -632,7 +639,7 @@
   function pagoComSucesso(){
     document.getElementById('qrSpinner').style.display='none';
     document.getElementById('qrStatusTxt').textContent='Pago! ✅';
-    var p=PLANOS[plano],total=p.preco+(bumpOn?BUMP:0);
+    var p=PLANOS[plano],total=p.preco+calcBumpTotal();
     if(typeof fbq!=='undefined') fbq('track','Purchase',{value:total,currency:'BRL'});
     setTimeout(function(){mostrarTela('screen-success');},800);
   }
