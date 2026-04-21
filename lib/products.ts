@@ -23,7 +23,7 @@ export const PRODUCTS: Record<string, Product> = {
   'pudim-premium': {
     nome: 'Pudim Sem Fogo — Premium',
     valor: 9.90,
-    deliveryUrl: '', // preencher com link do Drive quando o PDF premium estiver pronto
+    deliveryUrl: 'https://drive.google.com/drive/folders/1CF67gPBatYTwRSs82gg9Qo1eYfBb6fjO?usp=sharing',
   },
   'sobremesas-bump': {
     nome: 'Sobremesas Sem Fogo — Coleção Completa',
