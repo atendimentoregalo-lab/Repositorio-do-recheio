@@ -81,9 +81,11 @@ export async function GET(
   if (data.status === 'approved' && !entregues.has(id)) {
     entregues.add(id)
 
-    const buyer   = await kv.get<{ nome: string; email: string }>(`buyer:${id}`)
-    const nome    = buyer?.nome || data.payer?.first_name || 'Amiga'
-    const email   = buyer?.email || data.payer?.email || ''
+    const buyer   = await kv.get<{ nome: string; email: string }>(`buyer:${id}`).catch(() => null)
+    const nomeQS  = req.nextUrl.searchParams.get('nome') || ''
+    const emailQS = req.nextUrl.searchParams.get('email') || ''
+    const nome    = buyer?.nome || nomeQS || data.payer?.first_name || 'Amiga'
+    const email   = buyer?.email || emailQS || data.payer?.email || ''
     const produto = req.nextUrl.searchParams.get('produto') || ''
     const bumpsQS = req.nextUrl.searchParams.get('bumps') || ''
     const valor   = String((data.transaction_amount ?? 0).toFixed(2).replace('.', ','))

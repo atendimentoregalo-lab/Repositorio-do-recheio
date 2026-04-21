@@ -631,7 +631,7 @@
   function iniciarPolling(){
     var p=PLANOS[plano];
     var bumpsIds=CONFIG.bumps.filter(function(b){return bumpsSelected[b.id];}).map(function(b){return b.id;}).join(',');
-    var url='/api/checkout/status/'+paymentId+'?produto='+encodeURIComponent(p.api)+(bumpsIds?'&bumps='+encodeURIComponent(bumpsIds):'');
+    var url='/api/checkout/status/'+paymentId+'?produto='+encodeURIComponent(p.api)+(bumpsIds?'&bumps='+encodeURIComponent(bumpsIds):'')+'&email='+encodeURIComponent(userEmail)+'&nome='+encodeURIComponent(document.getElementById('nomeInput').value.trim());
     pollInt=setInterval(async function(){
       try{var r=await fetch(url),d=await r.json();if(d.status==='approved'){clearInterval(pollInt);pagoComSucesso();}}catch(e){}
     },3000);
