@@ -1,5 +1,5 @@
 import { Check, Shield } from "lucide-react"
-import { BuyButton, ScrollButton } from "@/components/buy-button"
+import { BuyButton } from "@/components/buy-button"
 import Image from "next/image"
 
 export default function SalesPage() {
@@ -62,7 +62,7 @@ export default function SalesPage() {
             </div>
           </div>
 
-          <ScrollButton />
+          <BuyButton />
         </div>
       </section>
 
