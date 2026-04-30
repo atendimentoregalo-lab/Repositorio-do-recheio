@@ -324,6 +324,7 @@
   var BASE = _prod.preco || 1.99;
   var paymentId = null;
   var pollInterval = null;
+  var pixelDisparado = false;
   var userEmail = '';
 
   function toggleBump(idx, adicional) {
@@ -422,7 +423,7 @@
         document.getElementById('qrSpinner').style.display = 'none';
         document.getElementById('qrStatusText').textContent = '✅ Pago!';
         var totalPago = BASE + bumpTotals.reduce(function(a,b){return a+(b||0);},0);
-        if (window.fbq) fbq('track', 'Purchase', { currency:'BRL', value: totalPago });
+        if (window.fbq && !pixelDisparado) { pixelDisparado = true; fbq('track', 'Purchase', { currency:'BRL', value: totalPago }); }
 
         // Notificação de venda (mesmo webhook do funil-clara)
         fetch('https://phyznlckywngdgphlyho.supabase.co/functions/v1/gg-webhook', {

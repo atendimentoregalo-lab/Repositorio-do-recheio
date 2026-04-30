@@ -456,7 +456,7 @@
 
 <script>
 (function(){
-  var plano = 'basico', bumpsSelected = {}, paymentId = null, pollInt = null, userEmail = '';
+  var plano = 'basico', bumpsSelected = {}, paymentId = null, pollInt = null, userEmail = '', pixelDisparado = false;
   var PLANOS = {
     basico:  { nome:'Pudim Sem Fogo — Básico',  preco:3.49, api:'pudim-basic',  img:'' },
     premium: { nome:'Pudim Sem Fogo — Premium', preco:9.90, api:'pudim-premium', img:'' }
@@ -641,7 +641,7 @@
     document.getElementById('qrSpinner').style.display='none';
     document.getElementById('qrStatusTxt').textContent='Pago! ✅';
     var p=PLANOS[plano],total=p.preco+calcBumpTotal();
-    if(typeof fbq!=='undefined') fbq('track','Purchase',{value:total,currency:'BRL'});
+    if(typeof fbq!=='undefined'&&!pixelDisparado){pixelDisparado=true;fbq('track','Purchase',{value:total,currency:'BRL'});}
     setTimeout(function(){mostrarTela('screen-success');},800);
   }
 
