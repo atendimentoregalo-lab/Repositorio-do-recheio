@@ -78,8 +78,11 @@ export async function GET(
   })
   const data = await r.json()
 
+  console.log(`[status] id=${id} status=${data.status}`)
+
   if (data.status === 'approved') {
   const wasSet = await kv.set(`processed:${id}`, 1, { nx: true, ex: 86400 }).catch(() => 'OK')
+  console.log(`[status] wasSet=${JSON.stringify(wasSet)}`)
   if (wasSet) {
 
     const nomeQS  = req.nextUrl.searchParams.get('nome') || ''
@@ -90,6 +93,9 @@ export async function GET(
     const produto = req.nextUrl.searchParams.get('produto') || ''
     const bumpsQS = req.nextUrl.searchParams.get('bumps') || ''
     const valor   = String((data.transaction_amount ?? 0).toFixed(2).replace('.', ','))
+
+    console.log(`[status] nome=${nome} email=${email} produto=${produto} bumps=${bumpsQS}`)
+    console.log(`[status] RESEND_KEY=${RESEND_KEY ? 'SET' : 'MISSING'} email_ok=${!!email}`)
 
     // Monta lista de materiais (produto principal + bumps) lendo do KV
     const itens: { nome: string; url: string }[] = []
@@ -102,15 +108,21 @@ export async function GET(
       }
     }
 
+    console.log(`[status] itens=${JSON.stringify(itens)}`)
+
     // Envia e-mail via Resend
     if (RESEND_KEY && email) {
       const resend = new Resend(RESEND_KEY)
+      console.log(`[status] enviando email para ${email}`)
       resend.emails.send({
         from: FROM_EMAIL,
         to: email,
         subject: produto.includes('pudim') ? '🍮 Seu Pudim Sem Fogo está aqui!' : '🎂 Seus Recheios Secretos estão aqui!',
         html: buildEmailHtml(nome, itens),
-      }).catch(err => console.error('Resend error:', err))
+      }).then(r => console.log(`[status] Resend ok:`, JSON.stringify(r)))
+        .catch(err => console.error('[status] Resend error:', err))
+    } else {
+      console.log(`[status] email PULADO — RESEND_KEY=${!!RESEND_KEY} email="${email}"`)
     }
 
     // Salva no CRM
