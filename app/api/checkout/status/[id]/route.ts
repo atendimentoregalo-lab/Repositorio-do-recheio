@@ -78,7 +78,7 @@ export async function GET(
   })
   const data = await r.json()
 
-  const wasSet = await kv.set(`processed:${id}`, 1, { nx: true, ex: 86400 }).catch(() => null)
+  const wasSet = await kv.set(`processed:${id}`, 1, { nx: true, ex: 86400 }).catch(() => 'OK')
   if (data.status === 'approved' && wasSet) {
 
     const nomeQS  = req.nextUrl.searchParams.get('nome') || ''
@@ -107,7 +107,7 @@ export async function GET(
       resend.emails.send({
         from: FROM_EMAIL,
         to: email,
-        subject: '🍮 Seu Pudim Sem Fogo está aqui!',
+        subject: produto.includes('pudim') ? '🍮 Seu Pudim Sem Fogo está aqui!' : '🎂 Seus Recheios Secretos estão aqui!',
         html: buildEmailHtml(nome, itens),
       }).catch(err => console.error('Resend error:', err))
     }
