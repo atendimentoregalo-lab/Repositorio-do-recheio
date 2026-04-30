@@ -415,8 +415,8 @@
     try {
       var _email = document.getElementById('emailInput').value.trim();
       var _nome  = document.getElementById('nomeInput').value.trim();
-      var _prod  = _plano === 'premium' ? 'premium' : 'basic';
-      var res  = await fetch('/api/checkout/status/' + paymentId + '?produto=' + encodeURIComponent(_prod) + '&email=' + encodeURIComponent(_email) + '&nome=' + encodeURIComponent(_nome));
+      var _prodId = _plano === 'premium' ? 'premium' : 'basic';
+      var res  = await fetch('/api/checkout/status/' + paymentId + '?produto=' + encodeURIComponent(_prodId) + '&email=' + encodeURIComponent(_email) + '&nome=' + encodeURIComponent(_nome));
       var data = await res.json();
       if (data.status === 'approved') {
         clearInterval(pollInterval);
@@ -425,19 +425,6 @@
         var totalPago = BASE + bumpTotals.reduce(function(a,b){return a+(b||0);},0);
         if (window.fbq && !pixelDisparado) { pixelDisparado = true; fbq('track', 'Purchase', { currency:'BRL', value: totalPago }); }
 
-        // Notificação de venda (mesmo webhook do funil-clara)
-        fetch('https://phyznlckywngdgphlyho.supabase.co/functions/v1/gg-webhook', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            event: 'pagamento_confirmado',
-            email: userEmail,
-            valor: String(totalPago.toFixed(2).replace('.',',')),
-            produto: _prod.nome || 'Recheios Secretos',
-            payment_id: paymentId,
-            timestamp: new Date().toISOString(),
-          }),
-        }).catch(function(){});
 
         // Links de acesso: produto principal + bumps selecionados
         var links = '<div style="background:white;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.08)">';
