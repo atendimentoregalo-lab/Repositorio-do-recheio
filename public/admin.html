@@ -362,9 +362,19 @@ function getConfig(plan) {
 }
 
 function salvar() {
-  localStorage.setItem('recheios_checkout_basic',   JSON.stringify(getConfig('basic')));
-  localStorage.setItem('recheios_checkout_premium', JSON.stringify(getConfig('premium')));
-  toast('✅ Salvo!','#128C7E');
+  var cfgBasic   = getConfig('basic');
+  var cfgPremium = getConfig('premium');
+  localStorage.setItem('recheios_checkout_basic',   JSON.stringify(cfgBasic));
+  localStorage.setItem('recheios_checkout_premium', JSON.stringify(cfgPremium));
+  // Salva no servidor (KV) para todos os clientes verem
+  fetch('/api/checkout/recheios-config', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ basic: cfgBasic, premium: cfgPremium }),
+  }).then(function(r) {
+    if (r.ok) toast('✅ Salvo!', '#128C7E');
+    else toast('⚠️ Erro ao salvar no servidor', '#e74c3c');
+  }).catch(function() { toast('⚠️ Sem conexão com servidor', '#e74c3c'); });
 }
 
 function preview() {

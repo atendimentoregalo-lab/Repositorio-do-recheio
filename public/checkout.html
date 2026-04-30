@@ -223,25 +223,46 @@
 </div>
 
 <script>
-  // ── Load config from admin dashboard (localStorage) ──────────────────
   var _plano = new URLSearchParams(window.location.search).get('plano') || 'basic';
   var _storageKey = _plano === 'premium' ? 'recheios_checkout_premium' : 'recheios_checkout_basic';
-  // fallback: migrate old key
-  var _cfg = (function(){
-    try {
-      var v = localStorage.getItem(_storageKey);
-      if (!v) v = localStorage.getItem('recheios_checkout_config');
-      return JSON.parse(v || '{}');
-    } catch(e){ return {}; }
-  })();
-  var _prod  = _cfg.produto  || {};
-  var _hdr   = _cfg.header   || {};
-  var _ban   = _cfg.banner   || {};
-  var _ok    = _cfg.sucesso  || {};
-  var _bumps = (_cfg.bumps && Array.isArray(_cfg.bumps)) ? _cfg.bumps : [];
+
+  var _cfg = {}, _prod = {}, _hdr = {}, _ban = {}, _ok = {}, _bumps = [];
+
+  function applyConfigObj(cfg) {
+    if (!cfg) return;
+    _cfg   = cfg;
+    _prod  = cfg.produto  || {};
+    _hdr   = cfg.header   || {};
+    _ban   = cfg.banner   || {};
+    _ok    = cfg.sucesso  || {};
+    _bumps = (cfg.bumps && Array.isArray(cfg.bumps)) ? cfg.bumps : [];
+    applyConfig();
+  }
+
+  // Tenta buscar do servidor; fallback para localStorage
+  fetch('/api/checkout/recheios-config')
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      var serverCfg = data && data[_plano] ? data[_plano] : null;
+      if (serverCfg) {
+        applyConfigObj(serverCfg);
+      } else {
+        // fallback localStorage
+        try {
+          var v = localStorage.getItem(_storageKey) || localStorage.getItem('recheios_checkout_config');
+          applyConfigObj(JSON.parse(v || '{}'));
+        } catch(e) { applyConfigObj({}); }
+      }
+    })
+    .catch(function() {
+      try {
+        var v = localStorage.getItem(_storageKey) || localStorage.getItem('recheios_checkout_config');
+        applyConfigObj(JSON.parse(v || '{}'));
+      } catch(e) { applyConfigObj({}); }
+    });
 
   // Apply config to DOM
-  (function applyConfig() {
+  function applyConfig() {
     // Header
     if (_hdr.nome) document.getElementById('waHeaderNome').textContent = _hdr.nome;
     if (_hdr.sub)  document.getElementById('waHeaderSub').textContent  = _hdr.sub;
@@ -262,7 +283,8 @@
     }
 
     // Product
-    var precoStr = 'R$ ' + (_prod.preco || 1.99).toFixed(2).replace('.',',');
+    BASE = parseFloat(_prod.preco) || 1.99;
+    var precoStr = 'R$ ' + BASE.toFixed(2).replace('.',',');
     if (_prod.nome)  document.getElementById('productName').textContent  = _prod.nome;
     document.getElementById('productPrice').textContent = precoStr;
     document.getElementById('subtotalProdLine').textContent = _prod.nome || 'Guia Básico (20 receitas)';
@@ -321,7 +343,7 @@
 
   // ── Runtime state ─────────────────────────────────────────────────────
   var bumpTotals = [];  // tracks additional value per selected bump
-  var BASE = _prod.preco || 1.99;
+  var BASE = 1.99; // atualizado em applyConfig()
   var paymentId = null;
   var pollInterval = null;
   var pixelDisparado = false;
