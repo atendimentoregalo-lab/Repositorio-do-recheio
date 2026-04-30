@@ -78,8 +78,9 @@ export async function GET(
   })
   const data = await r.json()
 
+  if (data.status === 'approved') {
   const wasSet = await kv.set(`processed:${id}`, 1, { nx: true, ex: 86400 }).catch(() => 'OK')
-  if (data.status === 'approved' && wasSet) {
+  if (wasSet) {
 
     const nomeQS  = req.nextUrl.searchParams.get('nome') || ''
     const emailQS = req.nextUrl.searchParams.get('email') || ''
@@ -135,6 +136,7 @@ export async function GET(
     }).then(async r => {
       if (!r.ok) console.error('Webhook pagamento_confirmado error:', r.status, await r.text())
     }).catch(e => console.error('Webhook fetch error:', e))
+    }
   }
 
   return NextResponse.json({ status: data.status })
