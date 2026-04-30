@@ -78,9 +78,8 @@ export async function GET(
   })
   const data = await r.json()
 
-  const jaProcessado = await kv.get(`processed:${id}`).catch(() => null)
-  if (data.status === 'approved' && !jaProcessado) {
-    await kv.set(`processed:${id}`, 1, { ex: 86400 }).catch(() => {})
+  const wasSet = await kv.set(`processed:${id}`, 1, { nx: true, ex: 86400 }).catch(() => null)
+  if (data.status === 'approved' && wasSet) {
 
     const nomeQS  = req.nextUrl.searchParams.get('nome') || ''
     const emailQS = req.nextUrl.searchParams.get('email') || ''
