@@ -78,8 +78,9 @@ export async function GET(
   })
   const data = await r.json()
 
-  if (data.status === 'approved' && !entregues.has(id)) {
-    entregues.add(id)
+  const jaProcessado = await kv.get(`processed:${id}`).catch(() => null)
+  if (data.status === 'approved' && !jaProcessado) {
+    await kv.set(`processed:${id}`, 1, { ex: 86400 }).catch(() => {})
 
     const nomeQS  = req.nextUrl.searchParams.get('nome') || ''
     const emailQS = req.nextUrl.searchParams.get('email') || ''

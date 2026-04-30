@@ -412,7 +412,10 @@
   async function checkStatus() {
     if (!paymentId) return;
     try {
-      var res  = await fetch('/api/checkout/status/' + paymentId);
+      var _email = document.getElementById('emailInput').value.trim();
+      var _nome  = document.getElementById('nomeInput').value.trim();
+      var _prod  = _plano === 'premium' ? 'premium' : 'basic';
+      var res  = await fetch('/api/checkout/status/' + paymentId + '?produto=' + encodeURIComponent(_prod) + '&email=' + encodeURIComponent(_email) + '&nome=' + encodeURIComponent(_nome));
       var data = await res.json();
       if (data.status === 'approved') {
         clearInterval(pollInterval);
