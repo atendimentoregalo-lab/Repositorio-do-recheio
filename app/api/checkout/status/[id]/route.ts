@@ -114,13 +114,17 @@ export async function GET(
     if (RESEND_KEY && email) {
       const resend = new Resend(RESEND_KEY)
       console.log(`[status] enviando email para ${email}`)
-      resend.emails.send({
-        from: FROM_EMAIL,
-        to: email,
-        subject: produto.includes('pudim') ? '🍮 Seu Pudim Sem Fogo está aqui!' : '🎂 Seus Recheios Secretos estão aqui!',
-        html: buildEmailHtml(nome, itens),
-      }).then(r => console.log(`[status] Resend ok:`, JSON.stringify(r)))
-        .catch(err => console.error('[status] Resend error:', err))
+      try {
+        const resendResult = await resend.emails.send({
+          from: FROM_EMAIL,
+          to: email,
+          subject: produto.includes('pudim') ? '🍮 Seu Pudim Sem Fogo está aqui!' : '🎂 Seus Recheios Secretos estão aqui!',
+          html: buildEmailHtml(nome, itens),
+        })
+        console.log(`[status] Resend ok:`, JSON.stringify(resendResult))
+      } catch (err) {
+        console.error('[status] Resend error:', err)
+      }
     } else {
       console.log(`[status] email PULADO — RESEND_KEY=${!!RESEND_KEY} email="${email}"`)
     }
@@ -133,21 +137,25 @@ export async function GET(
     }).catch(e => console.error('CRM save error:', e))
 
     // Webhook Supabase — notificação de venda confirmada
-    fetch(SUPABASE_FN, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        event: 'pagamento_confirmado',
-        nome,
-        email,
-        valor,
-        produto: prodInfo?.nome ?? produto,
-        payment_id: id,
-        timestamp: new Date().toISOString(),
-      }),
-    }).then(async r => {
-      if (!r.ok) console.error('Webhook pagamento_confirmado error:', r.status, await r.text())
-    }).catch(e => console.error('Webhook fetch error:', e))
+    try {
+      const whResp = await fetch(SUPABASE_FN, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event: 'pagamento_confirmado',
+          nome,
+          email,
+          valor,
+          produto: prodInfo?.nome ?? produto,
+          payment_id: id,
+          timestamp: new Date().toISOString(),
+        }),
+      })
+      if (!whResp.ok) console.error('Webhook error:', whResp.status, await whResp.text())
+      else console.log('[status] Webhook Supabase ok')
+    } catch (e) {
+      console.error('Webhook fetch error:', e)
+    }
     }
   }
 
