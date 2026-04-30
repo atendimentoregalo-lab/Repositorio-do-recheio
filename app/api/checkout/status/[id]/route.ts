@@ -18,10 +18,10 @@ async function getDeliveryUrl(produtoId: string, bumpId?: string): Promise<{ nom
     if (config) {
       if (bumpId) {
         const bump = config.bumps.find(b => b.id === bumpId)
-        if (bump) return { nome: bump.nome, url: bump.deliveryUrl }
+        if (bump?.deliveryUrl) return { nome: bump.nome, url: bump.deliveryUrl }
       } else {
         const prod = config.produtos[produtoId as keyof typeof config.produtos]
-        if (prod) return { nome: prod.nome, url: prod.deliveryUrl }
+        if (prod?.deliveryUrl) return { nome: prod.nome, url: prod.deliveryUrl }
       }
     }
   } catch {}
