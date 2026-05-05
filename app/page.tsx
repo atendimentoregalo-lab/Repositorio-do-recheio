@@ -62,14 +62,29 @@ export default function SalesPage() {
             </div>
           </div>
 
+          {/* Preço visível no hero — mobile vê antes dos 25% */}
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="text-4xl font-black text-orange-600">R$ 1,99</div>
+            <div className="text-left">
+              <div className="text-sm font-bold text-gray-500 line-through">R$ 19,90</div>
+              <div className="text-sm font-bold text-green-600">pagamento único</div>
+            </div>
+          </div>
+
           <BuyButton />
+
+          {/* Garantia logo abaixo do CTA */}
+          <div className="flex items-center justify-center gap-2 mt-4 text-sm text-gray-500">
+            <Shield className="h-4 w-4 text-green-500 flex-shrink-0" />
+            <span>Garantia de 7 dias • Acesso imediato no e-mail</span>
+          </div>
         </div>
       </section>
 
       {/* Beneficios */}
       <section id="offer" className="py-12 px-4 bg-white/60 backdrop-blur-sm">
         <div className="max-w-2xl mx-auto">
-          <div className="space-y-4 bg-white rounded-2xl p-8 shadow-md">
+          <div className="space-y-4 bg-white rounded-2xl p-8 shadow-md select-none">
             <div className="flex items-start gap-3">
               <Check className="h-6 w-6 text-orange-500 flex-shrink-0 mt-1" />
               <p className="text-lg text-gray-800">Recheios com e sem fogo</p>
