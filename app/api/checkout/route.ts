@@ -20,7 +20,7 @@ async function notificar(payload: object) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { produto, nome, email, valor: valorCustom } = await req.json()
+    const { produto, nome, email, valor: valorCustom, whatsapp } = await req.json()
 
     const prod = PRODUCTS[produto]
     if (!prod) {
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
     const pix  = data.point_of_interaction?.transaction_data
 
     // Salva dados do comprador no KV (TTL 2h) para recuperar ao confirmar pagamento
-    kv.set(`buyer:${data.id}`, { nome: nome || 'Cliente', email }, { ex: 7200 }).catch(() => {})
+    kv.set(`buyer:${data.id}`, { nome: nome || 'Cliente', email, whatsapp: whatsapp || '' }, { ex: 7200 }).catch(() => {})
 
     // Notifica PIX gerado (alguém chegou no checkout)
     notificar({

@@ -4,16 +4,16 @@ import { useRouter } from 'next/navigation'
 import type { CrmCustomer, CrmSegment } from '@/app/api/admin/crm/route'
 
 const SEGMENTS: Record<CrmSegment, { label: string; cor: string; proxPasso: string; emoji: string }> = {
-  'basico':       { label: 'Básico',               cor: '#f59e0b', proxPasso: 'Oferecer upgrade Premium (R$ 9,90)', emoji: '🥉' },
-  'basico-bump':  { label: 'Básico + Sobremesas',  cor: '#10b981', proxPasso: 'Oferecer upgrade para Premium',      emoji: '🥈' },
-  'premium':      { label: 'Premium',              cor: '#6366f1', proxPasso: 'Oferecer Sobremesas Sem Fogo',       emoji: '🥇' },
-  'premium-bump': { label: 'Premium + Sobremesas', cor: '#ea580c', proxPasso: 'Próximo produto da esteira 🔥',     emoji: '💎' },
+  'basico':       { label: 'Básico',         cor: '#f59e0b', proxPasso: 'Oferecer upgrade Premium (R$ 9,90)', emoji: '🥉' },
+  'basico-bump':  { label: 'Básico + Bump',  cor: '#10b981', proxPasso: 'Oferecer upgrade para Premium',      emoji: '🥈' },
+  'premium':      { label: 'Premium',        cor: '#6366f1', proxPasso: 'Oferecer bump complementar',         emoji: '🥇' },
+  'premium-bump': { label: 'Premium + Bump', cor: '#ea580c', proxPasso: 'Próximo produto da esteira 🔥',     emoji: '💎' },
 }
 
 function exportCsv(seg: CrmSegment, customers: CrmCustomer[]) {
-  const header = 'Nome,Email,Produto,Bumps,Valor,Data\n'
+  const header = 'Nome,Email,WhatsApp,Produto,Bumps,Valor,Data\n'
   const rows   = customers.map(c =>
-    `"${c.nome}","${c.email}","${c.produto}","${c.bumps.join('+')}","R$ ${c.valor}","${new Date(c.created_at).toLocaleDateString('pt-BR')}"`
+    `"${c.nome}","${c.email}","${c.whatsapp || ''}","${c.produto}","${c.bumps.join('+')}","R$ ${c.valor}","${new Date(c.created_at).toLocaleDateString('pt-BR')}"`
   ).join('\n')
   const blob = new Blob([header + rows], { type: 'text/csv;charset=utf-8;' })
   const url  = URL.createObjectURL(blob)
@@ -114,15 +114,21 @@ export default function CrmPage() {
                 ) : (
                   <div style={{ background:'white', borderRadius:14, boxShadow:'0 1px 4px rgba(0,0,0,.07)', overflow:'hidden' }}>
                     {/* Header da tabela */}
-                    <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr auto auto', gap:12, padding:'10px 16px', borderBottom:'1px solid #f5f5f4', fontSize:11, fontWeight:700, color:'#78716c', textTransform:'uppercase', letterSpacing:'.5px' }}>
-                      <span>Nome</span><span>Email</span><span>Valor</span><span>Data</span>
+                    <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr auto auto', gap:8, padding:'10px 16px', borderBottom:'1px solid #f5f5f4', fontSize:11, fontWeight:700, color:'#78716c', textTransform:'uppercase', letterSpacing:'.5px' }}>
+                      <span>Nome</span><span>Email</span><span>WhatsApp</span><span>Valor</span><span>Data</span>
                     </div>
                     {customers.map((c, i) => (
-                      <div key={i} style={{ display:'grid', gridTemplateColumns:'1fr 1fr auto auto', gap:12, padding:'12px 16px', borderBottom: i < customers.length-1 ? '1px solid #f5f5f4' : 'none', alignItems:'center' }}>
-                        <span style={{ fontSize:14, fontWeight:600, color:'#1c1917', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{c.nome}</span>
-                        <span style={{ fontSize:13, color:'#78716c', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{c.email}</span>
-                        <span style={{ fontSize:13, fontWeight:700, color:'#ea580c', whiteSpace:'nowrap' }}>R$ {c.valor}</span>
-                        <span style={{ fontSize:12, color:'#a8a29e', whiteSpace:'nowrap' }}>{new Date(c.created_at).toLocaleDateString('pt-BR')}</span>
+                      <div key={i} style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr auto auto', gap:8, padding:'12px 16px', borderBottom: i < customers.length-1 ? '1px solid #f5f5f4' : 'none', alignItems:'start' }}>
+                        <div>
+                          <div style={{ fontSize:14, fontWeight:600, color:'#1c1917', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{c.nome}</div>
+                          {c.bumps.length > 0 && (
+                            <div style={{ fontSize:11, color:'#10b981', fontWeight:600, marginTop:2 }}>+ {c.bumps.join(', ')}</div>
+                          )}
+                        </div>
+                        <span style={{ fontSize:13, color:'#78716c', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', paddingTop:2 }}>{c.email}</span>
+                        <span style={{ fontSize:13, color:'#128C7E', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', paddingTop:2 }}>{c.whatsapp || '—'}</span>
+                        <span style={{ fontSize:13, fontWeight:700, color:'#ea580c', whiteSpace:'nowrap', paddingTop:2 }}>R$ {c.valor}</span>
+                        <span style={{ fontSize:12, color:'#a8a29e', whiteSpace:'nowrap', paddingTop:2 }}>{new Date(c.created_at).toLocaleDateString('pt-BR')}</span>
                       </div>
                     ))}
                   </div>

@@ -85,14 +85,16 @@ export async function GET(
   console.log(`[status] wasSet=${JSON.stringify(wasSet)}`)
   if (wasSet) {
 
-    const nomeQS  = req.nextUrl.searchParams.get('nome') || ''
-    const emailQS = req.nextUrl.searchParams.get('email') || ''
-    const buyer   = await kv.get<{ nome: string; email: string }>(`buyer:${id}`).catch(() => null)
-    const nome    = nomeQS || buyer?.nome || data.payer?.first_name || 'Amiga'
-    const email   = emailQS || buyer?.email || data.payer?.email || ''
-    const produto = req.nextUrl.searchParams.get('produto') || ''
-    const bumpsQS = req.nextUrl.searchParams.get('bumps') || ''
-    const valor   = String((data.transaction_amount ?? 0).toFixed(2).replace('.', ','))
+    const nomeQS     = req.nextUrl.searchParams.get('nome') || ''
+    const emailQS    = req.nextUrl.searchParams.get('email') || ''
+    const whatsappQS = req.nextUrl.searchParams.get('whatsapp') || ''
+    const buyer      = await kv.get<{ nome: string; email: string; whatsapp?: string }>(`buyer:${id}`).catch(() => null)
+    const nome       = nomeQS || buyer?.nome || data.payer?.first_name || 'Amiga'
+    const email      = emailQS || buyer?.email || data.payer?.email || ''
+    const whatsapp   = whatsappQS || buyer?.whatsapp || ''
+    const produto    = req.nextUrl.searchParams.get('produto') || ''
+    const bumpsQS    = req.nextUrl.searchParams.get('bumps') || ''
+    const valor      = String((data.transaction_amount ?? 0).toFixed(2).replace('.', ','))
 
     console.log(`[status] nome=${nome} email=${email} produto=${produto} bumps=${bumpsQS}`)
     console.log(`[status] RESEND_KEY=${RESEND_KEY ? 'SET' : 'MISSING'} email_ok=${!!email}`)
@@ -132,7 +134,7 @@ export async function GET(
     // Salva no CRM
     const bumpsArr = bumpsQS ? bumpsQS.split(',').filter(Boolean) : []
     saveCustomer({
-      nome, email, produto, bumps: bumpsArr, valor,
+      nome, email, whatsapp, produto, bumps: bumpsArr, valor,
       payment_id: id, created_at: new Date().toISOString(),
     }).catch(e => console.error('CRM save error:', e))
 

@@ -143,6 +143,11 @@
         <label>Email para receber os materiais</label>
         <input type="email" id="emailInput" placeholder="seuemail@gmail.com" inputmode="email" autocomplete="email" autocorrect="off" autocapitalize="none">
       </div>
+      <div class="field" style="margin-top:12px">
+        <label>Número de WhatsApp</label>
+        <input type="tel" id="whatsappInput" placeholder="(11) 99999-9999" inputmode="tel" autocomplete="tel">
+        <div style="font-size:11px;color:#667781;margin-top:4px">Seu número pra te mandarmos o acesso no WhatsApp</div>
+      </div>
     </div>
 
     <!-- Order Bumps (renderizados pelo JS) -->
@@ -401,10 +406,12 @@
   }
 
   async function gerarPix() {
-    var emailEl = document.getElementById('emailInput');
-    var nomeEl  = document.getElementById('nomeInput');
-    var email   = emailEl.value.trim();
-    var nome    = nomeEl.value.trim();
+    var emailEl     = document.getElementById('emailInput');
+    var nomeEl      = document.getElementById('nomeInput');
+    var whatsappEl  = document.getElementById('whatsappInput');
+    var email       = emailEl.value.trim();
+    var nome        = nomeEl.value.trim();
+    var whatsapp    = whatsappEl ? whatsappEl.value.trim() : '';
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       emailEl.classList.add('err');
@@ -431,6 +438,7 @@
           produto: _plano === 'premium' ? 'premium' : 'basic',
           nome: nome || 'Cliente',
           email: email,
+          whatsapp: whatsapp,
           valor: totalStr
         })
       });
@@ -456,10 +464,12 @@
   async function checkStatus() {
     if (!paymentId) return;
     try {
-      var _email = document.getElementById('emailInput').value.trim();
-      var _nome  = document.getElementById('nomeInput').value.trim();
+      var _email    = document.getElementById('emailInput').value.trim();
+      var _nome     = document.getElementById('nomeInput').value.trim();
+      var _whatsapp = (document.getElementById('whatsappInput') || {}).value || '';
+      _whatsapp = _whatsapp.trim();
       var _prodId = _plano === 'premium' ? 'premium' : 'basic';
-      var res  = await fetch('/api/checkout/status/' + paymentId + '?produto=' + encodeURIComponent(_prodId) + '&email=' + encodeURIComponent(_email) + '&nome=' + encodeURIComponent(_nome));
+      var res  = await fetch('/api/checkout/status/' + paymentId + '?produto=' + encodeURIComponent(_prodId) + '&email=' + encodeURIComponent(_email) + '&nome=' + encodeURIComponent(_nome) + '&whatsapp=' + encodeURIComponent(_whatsapp));
       var data = await res.json();
       if (data.status === 'approved') {
         clearInterval(pollInterval);

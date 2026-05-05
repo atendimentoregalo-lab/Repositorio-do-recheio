@@ -5,6 +5,7 @@ import { requireAdmin } from '@/lib/admin-auth'
 export type CrmCustomer = {
   nome: string
   email: string
+  whatsapp?: string
   produto: string
   bumps: string[]
   valor: string
@@ -15,10 +16,10 @@ export type CrmCustomer = {
 export type CrmSegment = 'basico' | 'basico-bump' | 'premium' | 'premium-bump'
 
 export const SEGMENTS: Record<CrmSegment, { label: string; cor: string; proxPasso: string }> = {
-  'basico':       { label: 'Básico',                cor: '#f59e0b', proxPasso: 'Oferecer upgrade Premium (R$ 9,90)' },
-  'basico-bump':  { label: 'Básico + Sobremesas',   cor: '#10b981', proxPasso: 'Oferecer upgrade para Premium' },
-  'premium':      { label: 'Premium',               cor: '#6366f1', proxPasso: 'Oferecer Sobremesas Sem Fogo' },
-  'premium-bump': { label: 'Premium + Sobremesas',  cor: '#ea580c', proxPasso: 'Próximo produto da esteira 🔥' },
+  'basico':       { label: 'Básico',          cor: '#f59e0b', proxPasso: 'Oferecer upgrade Premium (R$ 9,90)' },
+  'basico-bump':  { label: 'Básico + Bump',   cor: '#10b981', proxPasso: 'Oferecer upgrade para Premium' },
+  'premium':      { label: 'Premium',         cor: '#6366f1', proxPasso: 'Oferecer bump complementar' },
+  'premium-bump': { label: 'Premium + Bump',  cor: '#ea580c', proxPasso: 'Próximo produto da esteira 🔥' },
 }
 
 export function getSegment(produto: string, bumps: string[]): CrmSegment {
