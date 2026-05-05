@@ -29,7 +29,7 @@ export default function SalesPage() {
                   className="w-full h-full object-cover"
                   width={112}
                   height={112}
-                  priority
+                  sizes="112px"
                 />
               </div>
               <p className="text-sm text-gray-600 mt-2 font-medium">Chocolate</p>
@@ -42,7 +42,7 @@ export default function SalesPage() {
                   className="w-full h-full object-cover"
                   width={112}
                   height={112}
-                  priority
+                  sizes="112px"
                 />
               </div>
               <p className="text-sm text-gray-600 mt-2 font-medium">Leite Ninho</p>
@@ -55,7 +55,7 @@ export default function SalesPage() {
                   className="w-full h-full object-cover"
                   width={112}
                   height={112}
-                  priority
+                  sizes="112px"
                 />
               </div>
               <p className="text-sm text-gray-600 mt-2 font-medium">Morango</p>
