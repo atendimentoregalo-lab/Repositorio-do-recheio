@@ -34,9 +34,9 @@ export default function RootLayout({
             src="https://www.facebook.com/tr?id=1058788355816913&ev=PageView&noscript=1" alt="" />
         </noscript>
 
-        {/* Clarity — lazyOnload: carrega depois de tudo, analytics não é crítico */}
+        {/* Clarity — lazyOnload, try/catch para não quebrar no FB in-app browser */}
         <Script id="clarity" strategy="lazyOnload">{`
-          (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wjiaqgsjd9");
+          try{(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wjiaqgsjd9");}catch(e){}
         `}</Script>
       </body>
     </html>
