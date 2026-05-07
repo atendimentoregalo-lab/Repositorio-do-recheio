@@ -4,6 +4,9 @@ import { PRODUCTS } from '@/lib/products'
 import { kv } from '@vercel/kv'
 import type { PudimConfig } from '@/app/api/admin/config/route'
 import { saveCustomer } from '@/app/api/admin/crm/route'
+import { sendWhatsAppTemplate } from '@/lib/whatsapp'
+
+const CHECKOUT_URL = process.env.NEXT_PUBLIC_URL ?? 'https://recheios-perfeitos-online.vercel.app'
 
 const MP_TOKEN    = process.env.MP_ACCESS_TOKEN!
 const RESEND_KEY  = process.env.RESEND_API_KEY
@@ -139,6 +142,25 @@ export async function GET(
       bumps: bumpsNomes.length > 0 ? bumpsNomes : bumpsArr,
       valor, payment_id: id, created_at: new Date().toISOString(),
     }).catch(e => console.error('CRM save error:', e))
+
+    // WhatsApp — entrega imediata
+    if (whatsapp && itens.length > 0) {
+      const deliveryLink = itens[0].url || `${CHECKOUT_URL}/checkout.html?plano=${produto}`
+      sendWhatsAppTemplate(whatsapp, 'recheios_entrega', [nome, deliveryLink])
+        .then(() => console.log('[wa] entrega enviada'))
+        .catch(e => console.error('[wa] entrega error:', e))
+    }
+
+    // Agenda upsell para 24h depois (só quem comprou básico sem premium)
+    const isPremium = produto.includes('premium')
+    if (whatsapp && !isPremium) {
+      const upsellAt = Date.now() + 24 * 60 * 60 * 1000
+      kv.zadd('upsell:queue', {
+        score: upsellAt,
+        member: JSON.stringify({ nome, whatsapp, payment_id: id }),
+      }).catch(e => console.error('[upsell] schedule error:', e))
+      console.log(`[upsell] agendado para ${new Date(upsellAt).toISOString()}`)
+    }
 
     // Webhook Supabase — notificação de venda confirmada
     try {
