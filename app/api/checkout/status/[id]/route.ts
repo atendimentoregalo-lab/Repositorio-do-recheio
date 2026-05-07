@@ -131,11 +131,13 @@ export async function GET(
       console.log(`[status] email PULADO — RESEND_KEY=${!!RESEND_KEY} email="${email}"`)
     }
 
-    // Salva no CRM
+    // Salva no CRM — usa nomes legíveis dos bumps (de itens[]) em vez dos IDs
     const bumpsArr = bumpsQS ? bumpsQS.split(',').filter(Boolean) : []
+    const bumpsNomes = itens.slice(1).map(i => i.nome)
     saveCustomer({
-      nome, email, whatsapp, produto, bumps: bumpsArr, valor,
-      payment_id: id, created_at: new Date().toISOString(),
+      nome, email, whatsapp, produto,
+      bumps: bumpsNomes.length > 0 ? bumpsNomes : bumpsArr,
+      valor, payment_id: id, created_at: new Date().toISOString(),
     }).catch(e => console.error('CRM save error:', e))
 
     // Webhook Supabase — notificação de venda confirmada

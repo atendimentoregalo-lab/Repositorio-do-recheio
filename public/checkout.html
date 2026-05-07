@@ -469,7 +469,10 @@
       var _whatsapp = (document.getElementById('whatsappInput') || {}).value || '';
       _whatsapp = _whatsapp.trim();
       var _prodId = _plano === 'premium' ? 'premium' : 'basic';
-      var res  = await fetch('/api/checkout/status/' + paymentId + '?produto=' + encodeURIComponent(_prodId) + '&email=' + encodeURIComponent(_email) + '&nome=' + encodeURIComponent(_nome) + '&whatsapp=' + encodeURIComponent(_whatsapp));
+      var _selectedBumpIds = [];
+      _bumps.forEach(function(b, i) { if (bumpTotals[i] > 0 && b.id) _selectedBumpIds.push(b.id); });
+      var _bumpsQS = _selectedBumpIds.join(',');
+      var res  = await fetch('/api/checkout/status/' + paymentId + '?produto=' + encodeURIComponent(_prodId) + '&email=' + encodeURIComponent(_email) + '&nome=' + encodeURIComponent(_nome) + '&whatsapp=' + encodeURIComponent(_whatsapp) + '&bumps=' + encodeURIComponent(_bumpsQS));
       var data = await res.json();
       if (data.status === 'approved') {
         clearInterval(pollInterval);
