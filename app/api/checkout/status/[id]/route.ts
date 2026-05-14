@@ -16,6 +16,23 @@ const SUPABASE_FN = 'https://phyznlckywngdgphlyho.supabase.co/functions/v1/gg-we
 const entregues = new Set<string>()
 
 async function getDeliveryUrl(produtoId: string, bumpId?: string): Promise<{ nome: string; url: string } | null> {
+  // Recheios config (basic / premium) — campo "acesso"
+  if (produtoId === 'basic' || produtoId === 'premium') {
+    try {
+      const rcfg = await kv.get<any>('recheios-checkout-config')
+      if (rcfg) {
+        const plan = rcfg[produtoId]
+        if (bumpId && Array.isArray(plan?.bumps)) {
+          const bump = plan.bumps.find((b: any) => b.id === bumpId)
+          if (bump?.acesso) return { nome: bump.nome, url: bump.acesso }
+        } else if (!bumpId && plan?.produto?.acesso) {
+          return { nome: plan.produto.nome, url: plan.produto.acesso }
+        }
+      }
+    } catch {}
+  }
+
+  // Pudim config
   try {
     const config = await kv.get<PudimConfig>('pudim-checkout-config')
     if (config) {
@@ -28,9 +45,10 @@ async function getDeliveryUrl(produtoId: string, bumpId?: string): Promise<{ nom
       }
     }
   } catch {}
+
   // Fallback para lib/products.ts
   const p = PRODUCTS[bumpId ?? produtoId]
-  if (p) return { nome: p.nome, url: p.deliveryUrl }
+  if (p && p.deliveryUrl) return { nome: p.nome, url: p.deliveryUrl }
   return null
 }
 
