@@ -431,6 +431,9 @@
     showLoading('Gerando seu PIX...');
 
     try {
+      var _selectedBumpIdsAtGen = [];
+      _bumps.forEach(function(b, i) { if (bumpTotals[i] > 0 && b.id) _selectedBumpIdsAtGen.push(b.id); });
+
       var res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -439,7 +442,8 @@
           nome: nome || 'Cliente',
           email: email,
           whatsapp: whatsapp,
-          valor: totalStr
+          valor: totalStr,
+          bumps: _selectedBumpIdsAtGen
         })
       });
 
