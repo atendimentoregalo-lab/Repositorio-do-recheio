@@ -47,7 +47,7 @@ export function UpgradePopup({
         currency: 'BRL'
       });
     }
-    window.location.href = '/checkout.html?bump=1'
+    window.location.href = 'https://ggcheckout.app/checkout/v2/YZdjit7Wh1dMX8FOAbHR'
   }
 
   const handleUpgradeDecline = () => {
@@ -58,7 +58,7 @@ export function UpgradePopup({
         currency: 'BRL'
       });
     }
-    window.location.href = '/checkout.html'
+    window.location.href = 'https://ggcheckout.app/checkout/v2/O4PSYnUIBTKXuBQ3Odnn'
   }
 
   if (!show) return null
