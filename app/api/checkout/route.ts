@@ -1,30 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { PRODUCTS } from '@/lib/products'
+import { kv } from '@vercel/kv'
 
-const MP_TOKEN = process.env.MP_ACCESS_TOKEN!
+const MP_TOKEN    = process.env.MP_ACCESS_TOKEN!
+const SUPABASE_FN = 'https://phyznlckywngdgphlyho.supabase.co/functions/v1/gg-webhook'
 
-const PRODUTOS = {
-  basic: {
-    nome: 'Recheios Secretos Básico',
-    valor: 1.99,
-    acesso: 'https://acesso-receitas-recheioss-basic1.lovable.app/',
-  },
-  premium: {
-    nome: 'Recheios Secretos Premium',
-    valor: 7.99,
-    acesso: 'https://acesso-receitas-recheioss-basic1.lovable.app/',
-  },
+async function notificar(payload: object) {
+  try {
+    const r = await fetch(SUPABASE_FN, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+    if (!r.ok) console.error('Webhook error:', r.status, await r.text())
+  } catch (e) {
+    console.error('Webhook fetch error:', e)
+  }
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const { produto, nome, email, valor: valorCustom } = await req.json()
+    const { produto, nome, email, valor: valorCustom, whatsapp, bumps } = await req.json()
 
-    const prod = PRODUTOS[produto as keyof typeof PRODUTOS]
+    const prod = PRODUCTS[produto]
     if (!prod) {
       return NextResponse.json({ error: 'Produto inválido' }, { status: 400 })
     }
 
-    const valorFinal = valorCustom ? parseFloat(String(valorCustom).replace(',', '.')) : prod.valor
+    const valorFinal = valorCustom
+      ? parseFloat(String(valorCustom).replace(',', '.'))
+      : prod.valor
 
     const r = await fetch('https://api.mercadopago.com/v1/payments', {
       method: 'POST',
@@ -48,14 +53,34 @@ export async function POST(req: NextRequest) {
     }
 
     const data = await r.json()
-    const pix = data.point_of_interaction?.transaction_data
+    const pix  = data.point_of_interaction?.transaction_data
+
+    // Salva dados do comprador no KV (TTL 24h) — usado pelo webhook do MP
+    kv.set(`buyer:${data.id}`, {
+      nome: nome || 'Cliente',
+      email,
+      whatsapp: whatsapp || '',
+      produto,
+      bumps: Array.isArray(bumps) ? bumps : [],
+    }, { ex: 86400 }).catch(() => {})
+
+    // Notifica PIX gerado (alguém chegou no checkout)
+    notificar({
+      event: 'pix_gerado',
+      nome: nome || 'Cliente',
+      email,
+      valor: valorFinal.toFixed(2).replace('.', ','),
+      produto: prod.nome,
+      payment_id: String(data.id),
+      timestamp: new Date().toISOString(),
+    })
 
     return NextResponse.json({
       payment_id: data.id,
       qr_code: pix?.qr_code,
       qr_code_base64: pix?.qr_code_base64,
       valor: prod.valor,
-      acesso: prod.acesso,
+      acesso: prod.deliveryUrl,
     })
   } catch (e: any) {
     console.error(e)

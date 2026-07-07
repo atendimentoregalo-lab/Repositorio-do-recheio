@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Admin — Recheios Secretos</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;min-height:100vh;color:#111}
+
+.topbar{background:#128C7E;color:white;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.topbar h1{font-size:16px;font-weight:700}
+.topbar span{font-size:11px;opacity:.75;display:block;margin-top:1px}
+
+/* Plan Tabs */
+.plan-tabs{display:flex;gap:0;background:white;border-bottom:2px solid #e9edef;position:sticky;top:52px;z-index:99}
+.plan-tab{flex:1;padding:13px;font-size:14px;font-weight:700;color:#667781;border:none;background:none;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s}
+.plan-tab.active{color:#128C7E;border-bottom-color:#128C7E}
+.plan-tab:hover:not(.active){color:#111;background:#f8f8f8}
+
+.main{max-width:760px;margin:0 auto;padding:20px 16px 80px}
+
+.section{background:white;border-radius:14px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:16px;overflow:hidden}
+.section-header{padding:14px 18px;border-bottom:1px solid #f0f2f5;display:flex;align-items:center;gap:10px}
+.section-icon{font-size:18px}
+.section-header h2{font-size:14px;font-weight:700;color:#111}
+.section-header p{font-size:11px;color:#667781;margin-top:1px}
+.section-body{padding:18px}
+
+.field{margin-bottom:14px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:11px;font-weight:700;color:#667781;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.field input,.field textarea,.field select{width:100%;padding:10px 12px;border:1.5px solid #e9edef;border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s;color:#111}
+.field input:focus,.field textarea:focus{border-color:#128C7E}
+.field textarea{resize:vertical;min-height:60px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:460px){.row2{grid-template-columns:1fr}}
+
+.img-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.img-preview{width:64px;height:64px;border-radius:10px;border:1.5px solid #e9edef;background:#f8f8f8;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;overflow:hidden}
+.img-preview img{width:100%;height:100%;object-fit:cover}
+.img-row .field{flex:1;margin-bottom:0}
+
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid #f0f2f5}
+.toggle-row:last-child{border-bottom:none;padding-bottom:0}
+.tl-label{font-size:14px;font-weight:600;color:#111}
+.tl-sub{font-size:11px;color:#667781;margin-top:1px}
+.toggle{position:relative;display:inline-block;width:42px;height:23px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#c8d0d8;border-radius:23px;cursor:pointer;transition:.2s}
+.slider:before{content:'';position:absolute;height:17px;width:17px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.2s}
+input:checked+.slider{background:#128C7E}
+input:checked+.slider:before{transform:translateX(19px)}
+
+.color-row{display:flex;align-items:center;gap:8px}
+.color-row input[type=color]{width:38px;height:36px;padding:2px;border:1.5px solid #e9edef;border-radius:8px;cursor:pointer;background:none;flex-shrink:0}
+.color-row input[type=text]{flex:1}
+
+/* Bumps */
+.bump-list{display:flex;flex-direction:column;gap:10px;margin-bottom:10px}
+.bump-card{border:1.5px solid #e9edef;border-radius:12px;overflow:hidden}
+.bump-card-top{background:#f8f9fa;padding:10px 14px;display:flex;align-items:center;justify-content:space-between}
+.bump-card-top span{font-size:13px;font-weight:700;color:#111}
+.bump-del{background:none;border:none;color:#e74c3c;cursor:pointer;font-size:20px;padding:0 2px;line-height:1;display:flex;align-items:center}
+.bump-body{padding:14px}
+.btn-add{width:100%;border:2px dashed #c8d8d0;background:none;border-radius:12px;padding:13px;font-size:14px;font-weight:700;color:#128C7E;cursor:pointer;transition:all .15s}
+.btn-add:hover{background:#f0faf7;border-color:#128C7E}
+.btn-copy-bumps{width:100%;border:1.5px solid #e9edef;background:#f8f9fa;border-radius:10px;padding:11px;font-size:13px;font-weight:700;color:#667781;cursor:pointer;margin-bottom:12px;transition:all .15s}
+.btn-copy-bumps:hover{background:#f0faf7;border-color:#128C7E;color:#128C7E}
+
+.save-bar{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #e9edef;padding:10px 16px;display:flex;gap:10px;z-index:200}
+.btn-save{flex:1;background:#128C7E;color:white;border:none;border-radius:10px;padding:12px;font-size:15px;font-weight:700;cursor:pointer}
+.btn-save:hover{background:#0e6b61}
+.btn-open{background:#25d366;color:white;border:none;border-radius:10px;padding:12px 18px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.btn-open:hover{background:#1aaa52}
+
+.toast{position:fixed;top:66px;left:50%;transform:translateX(-50%) translateY(-10px);background:#111;color:white;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;opacity:0;transition:all .25s;pointer-events:none;z-index:999;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.plan-panel{display:none}
+.plan-panel.active{display:block}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <h1>🍰 Painel de Checkout</h1>
+    <span>Recheios Secretos</span>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button style="background:rgba(255,255,255,.15);color:white;border:1.5px solid rgba(255,255,255,.35);padding:7px 13px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer" onclick="preview()">👁 Preview</button>
+  </div>
+</div>
+
+<!-- Plan Tabs -->
+<div class="plan-tabs">
+  <button class="plan-tab active" id="tab-basic" onclick="switchPlan('basic')">📦 Básico — R$1,99</button>
+  <button class="plan-tab" id="tab-premium" onclick="switchPlan('premium')">🌟 Premium — R$7,99</button>
+</div>
+
+<div class="main">
+
+<!-- ═══ PLANO BÁSICO ═══ -->
+<div class="plan-panel active" id="panel-basic">
+
+  <div class="section">
+    <div class="section-header"><span class="section-icon">📣</span><div><h2>Banner de urgência</h2><p>Faixa no topo com countdown</p></div></div>
+    <div class="section-body">
+      <div class="toggle-row">
+        <div><div class="tl-label">Ativar banner</div><div class="tl-sub">Faixa vermelha com timer no topo</div></div>
+        <label class="toggle"><input type="checkbox" id="b-bannerAtivo" checked><span class="slider"></span></label>
+      </div>
+      <div style="margin-top:14px">
+        <div class="field"><label>Texto</label><input type="text" id="b-bannerTexto" value="⏰ Oferta por tempo limitado!"></div>
+        <div class="row2">
+          <div class="field"><label>Tempo (minutos)</label><input type="number" id="b-bannerMin" value="15" min="1" max="60"></div>
+          <div class="field"><label>Cor</label>
+            <div class="color-row">
+              <input type="color" id="b-bannerCorPick" value="#e74c3c" oninput="document.getElementById('b-bannerCor').value=this.value">
+              <input type="text" id="b-bannerCor" value="#e74c3c" oninput="document.getElementById('b-bannerCorPick').value=this.value">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-icon">📦</span><div><h2>Produto principal</h2><p>Nome, imagem, preço e link de entrega</p></div></div>
+    <div class="section-body">
+      <div class="img-row">
+        <div class="img-preview" id="b-prodPrev"><span>🍫</span></div>
+        <div class="field"><label>URL da capa</label><input type="url" id="b-prodImg" placeholder="https://... (deixe vazio para usar emoji)" oninput="prevImg('b-prodImg','b-prodPrev')"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Emoji (sem imagem)</label><input type="text" id="b-prodEmoji" value="🍫" maxlength="4"></div>
+        <div class="field"><label>Preço (R$)</label><input type="number" id="b-prodPreco" value="1.99" step="0.01" min="0.01"></div>
+      </div>
+      <div class="field"><label>Nome</label><input type="text" id="b-prodNome" value="Guia Recheios Secretos"></div>
+      <div class="field"><label>Descrição curta</label><input type="text" id="b-prodDesc" value="20 receitas de recheios cremosos — acesso imediato"></div>
+      <div class="field"><label>Link de entrega</label><input type="url" id="b-prodAcesso" value="https://acesso-receitas-recheioss-basic1.lovable.app/"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-icon">💬</span><div><h2>Cabeçalho WhatsApp</h2><p>Nome e avatar na barra verde</p></div></div>
+    <div class="section-body">
+      <div class="img-row">
+        <div class="img-preview" id="b-hdrPrev"><span>🍰</span></div>
+        <div class="field"><label>URL do avatar</label><input type="url" id="b-hdrImg" placeholder="https://... (opcional)" oninput="prevImg('b-hdrImg','b-hdrPrev','🍰')"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Nome</label><input type="text" id="b-hdrNome" value="Recheios Secretos"></div>
+        <div class="field"><label>Subtítulo</label><input type="text" id="b-hdrSub" value="Finalizar pedido"></div>
+      </div>
+      <div class="field"><label>Emoji do avatar</label><input type="text" id="b-hdrEmoji" value="🍰" maxlength="4"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-icon">🎁</span><div><h2>Order Bumps</h2><p>Ofertas antes do PIX (máx. 3)</p></div></div>
+    <div class="section-body">
+      <div class="bump-list" id="b-bumpList"></div>
+      <button class="btn-add" id="b-addBump" onclick="addBump('basic')">+ Adicionar order bump</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-icon">✅</span><div><h2>Tela de sucesso</h2><p>Após o PIX ser confirmado</p></div></div>
+    <div class="section-body">
+      <div class="field"><label>Título</label><input type="text" id="b-okTitulo" value="Pagamento confirmado!"></div>
+      <div class="field"><label>Subtítulo</label><input type="text" id="b-okSub" value="Acesso enviado para o seu email"></div>
+      <div class="field"><label>Mensagem rodapé</label><input type="text" id="b-okFooter" value="Verifique sua caixa de entrada. Os links estão no email."></div>
+    </div>
+  </div>
+
+</div><!-- /panel-basic -->
+
+<!-- ═══ PLANO PREMIUM ═══ -->
+<div class="plan-panel" id="panel-premium">
+
+  <div class="section">
+    <div class="section-header"><span class="section-icon">📣</span><div><h2>Banner de urgência</h2><p>Faixa no topo com countdown</p></div></div>
+    <div class="section-body">
+      <div class="toggle-row">
+        <div><div class="tl-label">Ativar banner</div><div class="tl-sub">Faixa com timer no topo</div></div>
+        <label class="toggle"><input type="checkbox" id="p-bannerAtivo" checked><span class="slider"></span></label>
+      </div>
+      <div style="margin-top:14px">
+        <div class="field"><label>Texto</label><input type="text" id="p-bannerTexto" value="⏰ Oferta por tempo limitado!"></div>
+        <div class="row2">
+          <div class="field"><label>Tempo (minutos)</label><input type="number" id="p-bannerMin" value="15" min="1" max="60"></div>
+          <div class="field"><label>Cor</label>
+            <div class="color-row">
+              <input type="color" id="p-bannerCorPick" value="#e74c3c" oninput="document.getElementById('p-bannerCor').value=this.value">
+              <input type="text" id="p-bannerCor" value="#e74c3c" oninput="document.getElementById('p-bannerCorPick').value=this.value">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-icon">🌟</span><div><h2>Produto principal</h2><p>Configurações do plano premium</p></div></div>
+    <div class="section-body">
+      <div class="img-row">
+        <div class="img-preview" id="p-prodPrev"><span>📚</span></div>
+        <div class="field"><label>URL da capa</label><input type="url" id="p-prodImg" placeholder="https://... (opcional)" oninput="prevImg('p-prodImg','p-prodPrev')"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Emoji (sem imagem)</label><input type="text" id="p-prodEmoji" value="📚" maxlength="4"></div>
+        <div class="field"><label>Preço (R$)</label><input type="number" id="p-prodPreco" value="7.99" step="0.01" min="0.01"></div>
+      </div>
+      <div class="field"><label>Nome</label><input type="text" id="p-prodNome" value="Guia Recheios Secretos Premium"></div>
+      <div class="field"><label>Descrição curta</label><input type="text" id="p-prodDesc" value="+250 receitas — acesso imediato"></div>
+      <div class="field"><label>Link de entrega</label><input type="url" id="p-prodAcesso" value="https://acesso-receitas-recheioss-basic1.lovable.app/"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-icon">💬</span><div><h2>Cabeçalho WhatsApp</h2></div></div>
+    <div class="section-body">
+      <div class="img-row">
+        <div class="img-preview" id="p-hdrPrev"><span>🍰</span></div>
+        <div class="field"><label>URL do avatar</label><input type="url" id="p-hdrImg" placeholder="https://... (opcional)" oninput="prevImg('p-hdrImg','p-hdrPrev','🍰')"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Nome</label><input type="text" id="p-hdrNome" value="Recheios Secretos"></div>
+        <div class="field"><label>Subtítulo</label><input type="text" id="p-hdrSub" value="Finalizar pedido"></div>
+      </div>
+      <div class="field"><label>Emoji do avatar</label><input type="text" id="p-hdrEmoji" value="🍰" maxlength="4"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-icon">🎁</span><div><h2>Order Bumps</h2><p>Ofertas antes do PIX (máx. 3)</p></div></div>
+    <div class="section-body">
+      <button class="btn-copy-bumps" onclick="copyBumpsFromBasic()">📋 Copiar order bumps do plano Básico</button>
+      <div class="bump-list" id="p-bumpList"></div>
+      <button class="btn-add" id="p-addBump" onclick="addBump('premium')">+ Adicionar order bump</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="section-icon">✅</span><div><h2>Tela de sucesso</h2></div></div>
+    <div class="section-body">
+      <div class="field"><label>Título</label><input type="text" id="p-okTitulo" value="Pagamento confirmado!"></div>
+      <div class="field"><label>Subtítulo</label><input type="text" id="p-okSub" value="Acesso enviado para o seu email"></div>
+      <div class="field"><label>Mensagem rodapé</label><input type="text" id="p-okFooter" value="Verifique sua caixa de entrada. Os links estão no email."></div>
+    </div>
+  </div>
+
+</div><!-- /panel-premium -->
+</div><!-- /main -->
+
+<div class="save-bar">
+  <button class="btn-save" onclick="salvar()">💾 Salvar</button>
+  <button class="btn-open" onclick="preview()">👁 Abrir checkout</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var currentPlan = 'basic';
+var bumps = { basic: [], premium: [] };
+
+function switchPlan(plan) {
+  currentPlan = plan;
+  document.getElementById('panel-basic').classList.toggle('active', plan==='basic');
+  document.getElementById('panel-premium').classList.toggle('active', plan==='premium');
+  document.getElementById('tab-basic').classList.toggle('active', plan==='basic');
+  document.getElementById('tab-premium').classList.toggle('active', plan==='premium');
+}
+
+function toast(msg, color) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = color || '#111';
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2200);
+}
+
+function prevImg(inputId, previewId, fallbackEmoji) {
+  var url = document.getElementById(inputId).value.trim();
+  var box = document.getElementById(previewId);
+  if (url) { box.innerHTML = '<img src="'+url+'" onerror="this.parentNode.innerHTML=\'<span>❌</span>\'">';}
+  else { box.innerHTML = '<span>'+(fallbackEmoji||'📦')+'</span>'; }
+}
+
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function addBump(plan, data) {
+  if (bumps[plan].length >= 3) { toast('Máximo 3 bumps!','#e74c3c'); return; }
+  bumps[plan].push(data || { nome:'', desc:'', precoOriginal:'', precoAdicional:'', imagem:'', emoji:'📚', acesso:'' });
+  renderBumps(plan);
+}
+
+function removeBump(plan, idx) {
+  syncBumps(plan);
+  bumps[plan].splice(idx,1);
+  renderBumps(plan);
+}
+
+function syncBumps(plan) {
+  bumps[plan] = bumps[plan].map(function(_,i){
+    return {
+      nome: val(plan+'-bn'+i), desc: val(plan+'-bd'+i),
+      precoOriginal: val(plan+'-bpo'+i), precoAdicional: val(plan+'-bpa'+i),
+      imagem: val(plan+'-bi'+i), emoji: val(plan+'-be'+i)||'📚',
+      acesso: val(plan+'-bac'+i)
+    };
+  });
+}
+
+function val(id){ var el=document.getElementById(id); return el?el.value:''; }
+
+function renderBumps(plan) {
+  var prefix = plan[0]+'-'; // 'b-' or 'p-'
+  var list = document.getElementById(prefix+'bumpList');
+  list.innerHTML = '';
+  bumps[plan].forEach(function(b, i) {
+    var html = '<div class="bump-card">';
+    html += '<div class="bump-card-top"><span>Order Bump '+(i+1)+'</span>';
+    html += '<button class="bump-del" onclick="syncBumps(\''+plan+'\');removeBump(\''+plan+'\','+i+')">✕</button></div>';
+    html += '<div class="bump-body">';
+    html += '<div class="img-row"><div class="img-preview" id="'+plan+'-bprev'+i+'"><span>'+(b.emoji||'📚')+'</span></div>';
+    html += '<div class="field"><label>URL da imagem</label><input type="url" id="'+plan+'-bi'+i+'" value="'+esc(b.imagem||'')+'" placeholder="https://..." oninput="prevImg(\''+plan+'-bi'+i+'\',\''+plan+'-bprev'+i+'\')"></div></div>';
+    html += '<div class="row2"><div class="field"><label>Emoji</label><input type="text" id="'+plan+'-be'+i+'" value="'+esc(b.emoji||'📚')+'" maxlength="4"></div></div>';
+    html += '<div class="field"><label>Nome do bump</label><input type="text" id="'+plan+'-bn'+i+'" value="'+esc(b.nome||'')+'"></div>';
+    html += '<div class="field"><label>Descrição</label><input type="text" id="'+plan+'-bd'+i+'" value="'+esc(b.desc||'')+'"></div>';
+    html += '<div class="row2">';
+    html += '<div class="field"><label>Preço riscado</label><input type="text" id="'+plan+'-bpo'+i+'" value="'+esc(b.precoOriginal||'')+'" placeholder="R$ 29,90"></div>';
+    html += '<div class="field"><label>Preço adicional (R$)</label><input type="number" id="'+plan+'-bpa'+i+'" value="'+esc(b.precoAdicional||'')+'" step="0.01" placeholder="6.00"></div>';
+    html += '</div>';
+    html += '<div class="field"><label>Link de entrega</label><input type="url" id="'+plan+'-bac'+i+'" value="'+esc(b.acesso||'')+'"></div>';
+    html += '</div></div>';
+    list.innerHTML += html;
+  });
+  document.getElementById(prefix+'addBump').style.display = bumps[plan].length>=3?'none':'';
+  bumps[plan].forEach(function(b,i){ if(b.imagem) prevImg(plan+'-bi'+i, plan+'-bprev'+i); });
+}
+
+function copyBumpsFromBasic() {
+  syncBumps('basic');
+  bumps['premium'] = JSON.parse(JSON.stringify(bumps['basic']));
+  renderBumps('premium');
+  toast('Bumps copiados do plano Básico!','#128C7E');
+}
+
+function getConfig(plan) {
+  var px = plan[0]+'-';
+  syncBumps(plan);
+  return {
+    banner:  { ativo: document.getElementById(px+'bannerAtivo').checked, texto: val(px+'bannerTexto'), minutos: parseInt(val(px+'bannerMin'))||15, cor: val(px+'bannerCor') },
+    produto: { nome: val(px+'prodNome'), desc: val(px+'prodDesc'), preco: parseFloat(val(px+'prodPreco'))||1.99, imagem: val(px+'prodImg'), emoji: val(px+'prodEmoji')||'🍫', acesso: val(px+'prodAcesso') },
+    header:  { nome: val(px+'hdrNome'), sub: val(px+'hdrSub'), imagem: val(px+'hdrImg'), emoji: val(px+'hdrEmoji')||'🍰' },
+    bumps:   bumps[plan],
+    sucesso: { titulo: val(px+'okTitulo'), sub: val(px+'okSub'), footer: val(px+'okFooter') },
+  };
+}
+
+function salvar() {
+  var cfgBasic   = getConfig('basic');
+  var cfgPremium = getConfig('premium');
+  localStorage.setItem('recheios_checkout_basic',   JSON.stringify(cfgBasic));
+  localStorage.setItem('recheios_checkout_premium', JSON.stringify(cfgPremium));
+  // Salva no servidor (KV) para todos os clientes verem
+  fetch('/api/checkout/recheios-config', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ basic: cfgBasic, premium: cfgPremium }),
+  }).then(function(r) {
+    if (r.ok) toast('✅ Salvo!', '#128C7E');
+    else toast('⚠️ Erro ao salvar no servidor', '#e74c3c');
+  }).catch(function() { toast('⚠️ Sem conexão com servidor', '#e74c3c'); });
+}
+
+function preview() {
+  salvar();
+  var url = currentPlan==='premium' ? '/checkout.html?plano=premium' : '/checkout.html';
+  window.open(url, '_blank');
+}
+
+function loadField(id, val) { var el=document.getElementById(id); if(el&&val!==undefined&&val!=='') el.value=val; }
+function loadCheck(id, val) { var el=document.getElementById(id); if(el&&val!==undefined) el.checked=!!val; }
+
+function loadPlanConfig(plan, c) {
+  var px = plan[0]+'-';
+  if (!c) return;
+  if (c.banner) {
+    loadCheck(px+'bannerAtivo', c.banner.ativo);
+    loadField(px+'bannerTexto', c.banner.texto);
+    loadField(px+'bannerMin', c.banner.minutos);
+    if (c.banner.cor) { loadField(px+'bannerCor', c.banner.cor); loadField(px+'bannerCorPick', c.banner.cor); }
+  }
+  if (c.produto) {
+    loadField(px+'prodNome',   c.produto.nome);
+    loadField(px+'prodDesc',   c.produto.desc);
+    loadField(px+'prodPreco',  c.produto.preco);
+    loadField(px+'prodEmoji',  c.produto.emoji);
+    loadField(px+'prodAcesso', c.produto.acesso);
+    if (c.produto.imagem) { loadField(px+'prodImg', c.produto.imagem); prevImg(px+'prodImg', px+'prodPrev'); }
+  }
+  if (c.header) {
+    loadField(px+'hdrNome',  c.header.nome);
+    loadField(px+'hdrSub',   c.header.sub);
+    loadField(px+'hdrEmoji', c.header.emoji);
+    if (c.header.imagem) { loadField(px+'hdrImg', c.header.imagem); prevImg(px+'hdrImg', px+'hdrPrev', '🍰'); }
+  }
+  if (c.bumps && Array.isArray(c.bumps)) { bumps[plan] = c.bumps; }
+  renderBumps(plan);
+  if (c.sucesso) {
+    loadField(px+'okTitulo', c.sucesso.titulo);
+    loadField(px+'okSub',    c.sucesso.sub);
+    loadField(px+'okFooter', c.sucesso.footer);
+  }
+}
+
+// Init
+(function init() {
+  try {
+    // Migrate old key if exists
+    var old = localStorage.getItem('recheios_checkout_config');
+    if (old && !localStorage.getItem('recheios_checkout_basic')) {
+      localStorage.setItem('recheios_checkout_basic', old);
+    }
+    loadPlanConfig('basic',   JSON.parse(localStorage.getItem('recheios_checkout_basic')  || 'null'));
+    loadPlanConfig('premium', JSON.parse(localStorage.getItem('recheios_checkout_premium')|| 'null'));
+  } catch(e) {
+    renderBumps('basic');
+    renderBumps('premium');
+  }
+})();
+</script>
+</body>
+</html>

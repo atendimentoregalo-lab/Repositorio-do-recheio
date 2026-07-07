@@ -1,16 +1,207 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { Resend } from 'resend'
+import { PRODUCTS } from '@/lib/products'
+import { kv } from '@vercel/kv'
+import type { PudimConfig } from '@/app/api/admin/config/route'
+import { saveCustomer } from '@/app/api/admin/crm/route'
+import { sendWhatsAppTemplate } from '@/lib/whatsapp'
 
-const MP_TOKEN = process.env.MP_ACCESS_TOKEN!
+const CHECKOUT_URL = process.env.NEXT_PUBLIC_URL ?? 'https://recheios-perfeitos-online.vercel.app'
+
+const MP_TOKEN    = process.env.MP_ACCESS_TOKEN!
+const RESEND_KEY  = process.env.RESEND_API_KEY
+const FROM_EMAIL  = process.env.RESEND_FROM ?? 'Clara Aureliano <onboarding@resend.dev>'
+const SUPABASE_FN = 'https://phyznlckywngdgphlyho.supabase.co/functions/v1/gg-webhook'
+
+const entregues = new Set<string>()
+
+async function getDeliveryUrl(produtoId: string, bumpId?: string): Promise<{ nome: string; url: string } | null> {
+  // Recheios config (basic / premium) — campo "acesso"
+  if (produtoId === 'basic' || produtoId === 'premium') {
+    try {
+      const rcfg = await kv.get<any>('recheios-checkout-config')
+      if (rcfg) {
+        const plan = rcfg[produtoId]
+        if (bumpId && Array.isArray(plan?.bumps)) {
+          const bump = plan.bumps.find((b: any) => b.id === bumpId)
+          if (bump?.acesso) return { nome: bump.nome, url: bump.acesso }
+        } else if (!bumpId && plan?.produto?.acesso) {
+          return { nome: plan.produto.nome, url: plan.produto.acesso }
+        }
+      }
+    } catch {}
+  }
+
+  // Pudim config
+  try {
+    const config = await kv.get<PudimConfig>('pudim-checkout-config')
+    if (config) {
+      if (bumpId) {
+        const bump = config.bumps.find(b => b.id === bumpId)
+        if (bump?.deliveryUrl) return { nome: bump.nome, url: bump.deliveryUrl }
+      } else {
+        const prod = config.produtos[produtoId as keyof typeof config.produtos]
+        if (prod?.deliveryUrl) return { nome: prod.nome, url: prod.deliveryUrl }
+      }
+    }
+  } catch {}
+
+  // Fallback para lib/products.ts
+  const p = PRODUCTS[bumpId ?? produtoId]
+  if (p && p.deliveryUrl) return { nome: p.nome, url: p.deliveryUrl }
+  return null
+}
+
+function buildEmailHtml(nome: string, itens: { nome: string; url: string }[]) {
+  const botoes = itens
+    .filter(i => i.url)
+    .map(i => `
+      <div style="background:#fff8f0;border:1px solid #fed7aa;border-radius:12px;padding:16px 20px;margin-bottom:14px">
+        <div style="font-size:15px;font-weight:700;color:#1c1917;margin-bottom:10px">🍮 ${i.nome}</div>
+        <a href="${i.url}" style="display:inline-block;background:#ea580c;color:white;text-decoration:none;padding:11px 24px;border-radius:8px;font-size:14px;font-weight:700">
+          Acessar material →
+        </a>
+      </div>`)
+    .join('')
+
+  return `<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#fffbf0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+  <div style="max-width:520px;margin:0 auto;padding:32px 16px">
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="font-size:52px">🍮</div>
+      <h1 style="font-size:22px;font-weight:800;color:#1c1917;margin:12px 0 4px">Pagamento confirmado! 🎉</h1>
+      <p style="color:#78716c;font-size:14px;margin:0">Oi ${nome}, seus materiais estão aqui embaixo 👇</p>
+    </div>
+    ${botoes || '<p style="color:#78716c;text-align:center">Seu acesso será enviado em breve.</p>'}
+    <div style="background:white;border-radius:12px;padding:16px 20px;margin-top:8px;font-size:13px;color:#92400e;line-height:1.6;border:1px solid #fed7aa">
+      ♾️ <strong>Acesso vitalício</strong> — guarde esse e-mail, os links não expiram nunca!
+    </div>
+    <p style="text-align:center;color:#a8a29e;font-size:13px;margin-top:24px;line-height:1.8">
+      Com carinho, <strong style="color:#ea580c">Clara Aureliano</strong> 💛<br>
+      Dúvidas? Responda esse e-mail que resolvo na hora.
+    </p>
+  </div>
+</body>
+</html>`
+}
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params
+
   const r = await fetch(`https://api.mercadopago.com/v1/payments/${id}`, {
     headers: { Authorization: `Bearer ${MP_TOKEN}` },
     cache: 'no-store',
   })
   const data = await r.json()
+
+  console.log(`[status] id=${id} status=${data.status}`)
+
+  if (data.status === 'approved') {
+  const wasSet = await kv.set(`processed:${id}`, 1, { nx: true, ex: 86400 }).catch(() => 'OK')
+  console.log(`[status] wasSet=${JSON.stringify(wasSet)}`)
+  if (wasSet) {
+
+    const nomeQS     = req.nextUrl.searchParams.get('nome') || ''
+    const emailQS    = req.nextUrl.searchParams.get('email') || ''
+    const whatsappQS = req.nextUrl.searchParams.get('whatsapp') || ''
+    const buyer      = await kv.get<{ nome: string; email: string; whatsapp?: string }>(`buyer:${id}`).catch(() => null)
+    const nome       = nomeQS || buyer?.nome || data.payer?.first_name || 'Amiga'
+    const email      = emailQS || buyer?.email || data.payer?.email || ''
+    const whatsapp   = whatsappQS || buyer?.whatsapp || ''
+    const produto    = req.nextUrl.searchParams.get('produto') || ''
+    const bumpsQS    = req.nextUrl.searchParams.get('bumps') || ''
+    const valor      = String((data.transaction_amount ?? 0).toFixed(2).replace('.', ','))
+
+    console.log(`[status] nome=${nome} email=${email} produto=${produto} bumps=${bumpsQS}`)
+    console.log(`[status] RESEND_KEY=${RESEND_KEY ? 'SET' : 'MISSING'} email_ok=${!!email}`)
+
+    // Monta lista de materiais (produto principal + bumps) lendo do KV
+    const itens: { nome: string; url: string }[] = []
+    const prodInfo = await getDeliveryUrl(produto)
+    if (prodInfo) itens.push(prodInfo)
+    if (bumpsQS) {
+      for (const bumpId of bumpsQS.split(',')) {
+        const b = await getDeliveryUrl(produto, bumpId.trim())
+        if (b) itens.push(b)
+      }
+    }
+
+    console.log(`[status] itens=${JSON.stringify(itens)}`)
+
+    // Envia e-mail via Resend
+    if (RESEND_KEY && email) {
+      const resend = new Resend(RESEND_KEY)
+      console.log(`[status] enviando email para ${email}`)
+      try {
+        const resendResult = await resend.emails.send({
+          from: FROM_EMAIL,
+          to: email,
+          subject: produto.includes('pudim') ? '🍮 Seu Pudim Sem Fogo está aqui!' : '🎂 Seus Recheios Secretos estão aqui!',
+          html: buildEmailHtml(nome, itens),
+        })
+        console.log(`[status] Resend ok:`, JSON.stringify(resendResult))
+      } catch (err) {
+        console.error('[status] Resend error:', err)
+      }
+    } else {
+      console.log(`[status] email PULADO — RESEND_KEY=${!!RESEND_KEY} email="${email}"`)
+    }
+
+    // Salva no CRM — usa nomes legíveis dos bumps (de itens[]) em vez dos IDs
+    const bumpsArr = bumpsQS ? bumpsQS.split(',').filter(Boolean) : []
+    const bumpsNomes = itens.slice(1).map(i => i.nome)
+    saveCustomer({
+      nome, email, whatsapp, produto,
+      bumps: bumpsNomes.length > 0 ? bumpsNomes : bumpsArr,
+      valor, payment_id: id, created_at: new Date().toISOString(),
+    }).catch(e => console.error('CRM save error:', e))
+
+    // WhatsApp — entrega imediata
+    if (whatsapp && itens.length > 0) {
+      const deliveryLink = itens[0].url || `${CHECKOUT_URL}/checkout.html?plano=${produto}`
+      sendWhatsAppTemplate(whatsapp, 'recheios_entrega', [nome, deliveryLink])
+        .then(() => console.log('[wa] entrega enviada'))
+        .catch(e => console.error('[wa] entrega error:', e))
+    }
+
+    // Agenda upsell para 24h depois (só quem comprou básico sem premium)
+    const isPremium = produto.includes('premium')
+    if (whatsapp && !isPremium) {
+      const upsellAt = Date.now() + 24 * 60 * 60 * 1000
+      kv.zadd('upsell:queue', {
+        score: upsellAt,
+        member: JSON.stringify({ nome, whatsapp, payment_id: id }),
+      }).catch(e => console.error('[upsell] schedule error:', e))
+      console.log(`[upsell] agendado para ${new Date(upsellAt).toISOString()}`)
+    }
+
+    // Webhook Supabase — notificação de venda confirmada
+    try {
+      const whResp = await fetch(SUPABASE_FN, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event: 'pagamento_confirmado',
+          nome,
+          email,
+          valor,
+          produto: prodInfo?.nome ?? produto,
+          payment_id: id,
+          timestamp: new Date().toISOString(),
+        }),
+      })
+      if (!whResp.ok) console.error('Webhook error:', whResp.status, await whResp.text())
+      else console.log('[status] Webhook Supabase ok')
+    } catch (e) {
+      console.error('Webhook fetch error:', e)
+    }
+    }
+  }
+
   return NextResponse.json({ status: data.status })
 }
