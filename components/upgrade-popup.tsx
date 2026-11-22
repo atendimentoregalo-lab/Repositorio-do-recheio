@@ -47,7 +47,7 @@ export function UpgradePopup({
         currency: 'BRL'
       });
     }
-    window.location.href = 'https://jcmultii.mycartpanda.com/checkout/172571449:1'
+    window.location.href = 'https://ggcheckout.app/checkout/v2/wIPch9UDB2O9sNNCDAAEJv'
   }
 
   const handleUpgradeDecline = () => {
@@ -58,7 +58,7 @@ export function UpgradePopup({
         currency: 'BRL'
       });
     }
-    window.location.href = 'https://jcmultii.mycartpanda.com/checkout/172571568:1'
+    window.location.href = 'https://ggcheckout.app/checkout/v2/PNAubEWNug7yQunsDyWO3X'
   }
 
   if (!show) return null
