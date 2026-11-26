@@ -26,25 +26,45 @@ export default function SalesPage() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#f7efe3] text-[#321b13]">
       <section className="relative px-5 pb-16 pt-12 sm:pb-20 sm:pt-16">
-        <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-          <div className="text-center lg:text-left">
-            <p className="mb-5 inline-flex rounded-full border border-[#d9b985] bg-[#fff8ec] px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[#8b4b2b]">
-              Guia digital • acesso imediato
-            </p>
-            <h1 className="mx-auto max-w-3xl font-serif text-4xl font-black leading-[1.08] tracking-tight text-[#321b13] sm:text-5xl lg:mx-0 lg:text-6xl">
-              Lembra do recheio mais gostoso que você já comeu na vida?
-            </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-[#654b3f] sm:text-xl lg:mx-0">
-              Imagine poder fazer sempre um recheio cremoso, gostoso e consistente — e ouvir todos aqueles elogios.
-            </p>
-            <p className="mx-auto mt-5 inline-block rounded-md bg-[#a82725] px-4 py-3 text-base font-extrabold text-white shadow-lg sm:text-lg lg:mx-0">
-              Isso é mais simples do que você pensa.
-            </p>
-            <div className="mt-7 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid items-center gap-9 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="text-center lg:text-left">
+              <h1 className="mx-auto max-w-3xl font-serif text-4xl font-black leading-[1.08] tracking-tight text-[#321b13] sm:text-5xl lg:mx-0 lg:text-6xl">
+                Lembra do recheio mais gostoso que você já comeu na vida?
+              </h1>
+              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-[#654b3f] sm:text-xl lg:mx-0">
+                Imagine poder fazer sempre um recheio cremoso, gostoso e consistente — e ouvir todos aqueles elogios.
+              </p>
+              <p className="mx-auto mt-5 inline-block rounded-md bg-[#a82725] px-4 py-3 text-base font-extrabold text-white shadow-lg sm:text-lg lg:mx-0">
+                Isso é mais simples do que você pensa.
+              </p>
+            </div>
+
+            <div className="relative mx-auto w-full max-w-sm lg:max-w-md">
+              <div className="absolute -inset-3 rotate-2 rounded-[2rem] bg-[#c48a51]/20" aria-hidden="true" />
+              <div className="relative rotate-1 overflow-hidden rounded-[1.7rem] border-[10px] border-[#fffaf2] bg-[#fffaf2] shadow-[0_28px_70px_rgba(65,35,20,0.22)]">
+                <Image
+                  src="/clara-filling.jpg"
+                  alt="Clara apresentando um pote de recheio cremoso"
+                  width={900}
+                  height={1100}
+                  priority
+                  sizes="(max-width: 1024px) 90vw, 36vw"
+                  className="aspect-[4/5] w-full object-cover"
+                />
+              </div>
+              <div className="absolute -bottom-5 -left-2 rounded-xl bg-[#fffaf2] px-5 py-3 font-serif text-sm font-bold text-[#754126] shadow-xl sm:left-0">
+                Meu segredo revelado
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-12 text-center">
+            <div className="flex flex-col items-center justify-center gap-2 sm:flex-row sm:gap-4">
               <span className="text-lg font-semibold text-[#8c7667] line-through">De R$ 67</span>
               <span className="font-serif text-4xl font-black text-[#a82725] sm:text-5xl">por R$ 1,99</span>
             </div>
-            <div className="mt-7 flex justify-center lg:justify-start">
+            <div className="mt-6 flex justify-center">
               <a
                 href="#offer"
                 className="inline-flex min-h-12 items-center justify-center rounded-xl bg-[#a82725] px-8 py-4 text-lg font-black text-white shadow-lg transition hover:bg-[#bd302d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#321b13]"
@@ -53,24 +73,6 @@ export default function SalesPage() {
               </a>
             </div>
             <p className="mt-3 text-sm text-[#806c5d]">Pagamento único • acesso enviado após a confirmação</p>
-          </div>
-
-          <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-            <div className="absolute -inset-3 rotate-2 rounded-[2rem] bg-[#c48a51]/20" aria-hidden="true" />
-            <div className="relative rotate-1 overflow-hidden rounded-[1.7rem] border-[10px] border-[#fffaf2] bg-[#fffaf2] shadow-[0_28px_70px_rgba(65,35,20,0.22)]">
-              <Image
-                src="/clara-filling.jpg"
-                alt="Clara apresentando um pote de recheio cremoso"
-                width={900}
-                height={1100}
-                priority
-                sizes="(max-width: 1024px) 90vw, 42vw"
-                className="aspect-[4/5] w-full object-cover"
-              />
-            </div>
-            <div className="absolute -bottom-5 -left-2 rounded-xl bg-[#fffaf2] px-5 py-3 font-serif text-sm font-bold text-[#754126] shadow-xl sm:left-0">
-              Meu segredo revelado
-            </div>
           </div>
         </div>
       </section>
@@ -112,13 +114,32 @@ export default function SalesPage() {
               Bolos, bolos no pote, tortas e sobremesas — e para quem já vende ou quer começar a vender.
             </p>
           </div>
-          <div className="rounded-2xl bg-[#f2e4d1] p-5 sm:p-7">
-            <p className="mb-4 text-sm font-bold uppercase tracking-wider text-[#65432f]">Uma mensagem da Clara</p>
-            <audio className="w-full" controls preload="none" aria-label="Áudio da Clara sobre as receitas">
-              <source src="/clara-audio.ogg" type="audio/ogg" />
-              Seu navegador não suporta reprodução de áudio.
-            </audio>
-            <p className="mt-3 text-xs text-[#806c5d]">Ouça a Clara contar para quem as receitas são ideais.</p>
+          <div className="rounded-3xl border border-[#d8e8d9] bg-[#e9f4e9] p-4 shadow-sm sm:p-5">
+            <div className="mb-4 flex items-center gap-3">
+              <Image
+                src="/clara-avatar.jpeg"
+                alt="Clara Aureliano"
+                width={56}
+                height={56}
+                loading="lazy"
+                sizes="56px"
+                className="h-14 w-14 rounded-full border-2 border-white object-cover shadow-sm"
+              />
+              <div>
+                <p className="font-semibold text-[#283b2d]">Clara Aureliano</p>
+                <p className="text-xs text-[#607663]">Mensagem de voz</p>
+              </div>
+              <span className="ml-auto text-xs text-[#607663]" aria-hidden="true">áudio</span>
+            </div>
+            <div className="rounded-2xl bg-[#f7fbf6] p-3 sm:p-4">
+              <audio className="h-11 w-full accent-[#168c55]" controls preload="metadata" aria-label="Áudio da Clara sobre as receitas">
+                <source src="/clara-audio.ogg" type="audio/ogg" />
+                Seu navegador não suporta reprodução de áudio.
+              </audio>
+            </div>
+            <p className="mt-4 text-sm leading-relaxed text-[#435b46]">
+              “Nossas receitas são perfeitas para bolos, bolos no pote, tortas, sobremesas e pra quem vende ou quer começar a vender.”
+            </p>
           </div>
         </div>
       </section>
@@ -147,29 +168,36 @@ export default function SalesPage() {
               </a>
             </article>
 
-            <article className="relative order-1 flex flex-col overflow-hidden rounded-3xl border-2 border-[#c79b58] bg-[#321b13] p-6 text-[#fff8ec] shadow-[0_24px_70px_rgba(50,27,19,0.24)] sm:p-8 md:order-2">
-              <div className="absolute right-0 top-0 rounded-bl-2xl bg-[#c79b58] px-4 py-2 text-xs font-black uppercase tracking-wider text-[#321b13]">Mais escolhido</div>
-              <p className="mt-7 text-xs font-bold uppercase tracking-[0.18em] text-[#e4b56e]">A experiência completa</p>
-              <h3 className="mt-2 font-serif text-2xl font-black sm:text-3xl">Plano Completo</h3>
-              <ul className="mt-6 space-y-3 text-sm leading-relaxed text-[#fff1dc] sm:text-base">
+            <article className="relative order-1 flex flex-col rounded-3xl border-2 border-[#dfaaa9] bg-gradient-to-br from-[#fff9f6] via-[#fff0ed] to-[#f9dfdc] p-6 text-[#3b201c] shadow-[0_24px_70px_rgba(133,55,51,0.16)] sm:p-8 md:order-2">
+              <div className="mb-5 flex justify-center">
+                <span className="inline-flex items-center rounded-full bg-[#a82725] px-5 py-2.5 text-sm font-black uppercase tracking-[0.12em] text-white shadow-md sm:text-base">
+                  Mais escolhido
+                </span>
+              </div>
+              <p className="text-center text-sm font-bold uppercase tracking-[0.18em] text-[#9a4d4a]">Tudo em um só acesso</p>
+              <h3 className="mt-2 text-center font-serif text-3xl font-black text-[#3b201c] sm:text-4xl">Plano Completo</h3>
+              <p className="mx-auto mt-3 max-w-md text-center text-base leading-relaxed text-[#75524c]">
+                Mais receitas, presentes especiais e suporte para acompanhar você.
+              </p>
+              <ul className="mt-7 space-y-4 text-base leading-relaxed text-[#49322e] sm:text-lg">
                 {completeBenefits.map((benefit) => (
-                  <li key={benefit} className="flex gap-3"><Check className="mt-0.5 h-5 w-5 flex-none text-[#e4b56e]" />{benefit}</li>
+                  <li key={benefit} className="flex gap-3"><Check className="mt-0.5 h-6 w-6 flex-none text-[#b24d58]" />{benefit}</li>
                 ))}
               </ul>
-              <div className="my-6 rounded-2xl border border-white/10 bg-white/5 p-5">
-                <p className="text-center text-sm font-bold text-[#e4b56e]">E de presente hoje para você:</p>
-                <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-                  {gifts.map((gift) => <li key={gift} className="flex gap-2 text-sm text-[#fff1dc]"><span className="text-[#e4b56e]">+</span>{gift}</li>)}
+              <div className="my-7 rounded-2xl border border-[#e7c7c2] bg-white/75 p-5 sm:p-6">
+                <p className="text-center text-base font-extrabold text-[#8c3d43] sm:text-lg">E ainda leva estes presentes:</p>
+                <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                  {gifts.map((gift) => <li key={gift} className="flex gap-2 text-sm font-medium text-[#583b36] sm:text-base"><span className="font-black text-[#b24d58]">+</span>{gift}</li>)}
                 </ul>
               </div>
               <div className="mb-5 flex items-end justify-center gap-3">
-                <span className="pb-1 text-sm text-[#d5c2ad] line-through">De R$ 127</span>
-                <span className="font-serif text-5xl font-black text-[#f0c777]">R$ 9,27</span>
+                <span className="pb-1 text-base text-[#92716b] line-through">De R$ 127</span>
+                <span className="font-serif text-5xl font-black text-[#9a3944] sm:text-6xl">R$ 9,27</span>
               </div>
-              <a href="https://ggcheckout.app/checkout/v2/si3AocmqeWzMShfoQl2nhZ" className="inline-flex min-h-14 items-center justify-center rounded-xl bg-[#a82725] px-5 py-4 text-center text-lg font-black text-white shadow-lg transition hover:bg-[#bd302d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+              <a href="https://ggcheckout.app/checkout/v2/si3AocmqeWzMShfoQl2nhZ" className="inline-flex min-h-14 items-center justify-center rounded-xl bg-[#168c55] px-5 py-4 text-center text-lg font-black text-white shadow-lg transition hover:bg-[#117647] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#321b13]">
                 EU QUERO!
               </a>
-              <p className="mt-3 text-center text-xs text-[#e7d6c2]">Garantia de 14 dias sobre sua compra</p>
+              <p className="mt-3 text-center text-sm text-[#75524c]">Garantia de 14 dias sobre sua compra</p>
             </article>
           </div>
         </div>
