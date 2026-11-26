@@ -53,7 +53,7 @@ export function ScrollButton() {
       onClick={scrollToOffer}
       className="text-lg px-8 py-6 bg-orange-500 hover:bg-orange-600 text-white font-bold shadow-xl rounded-lg transition-transform hover:scale-105"
     >
-      Quero minhas receitas agora!
+      EU QUERO
     </Button>
   )
 }
